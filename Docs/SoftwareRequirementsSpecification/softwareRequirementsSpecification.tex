@@ -2,10 +2,12 @@
 \usepackage[utf8]{inputenc}
 \usepackage[letterpaper, portrait, margin=1in]{geometry}
 \usepackage{enumerate}
+% Display only levels as deep as subsection in tableofcontents
+\setcounter{tocdepth}{2}
 
 \usepackage{caption}
 \usepackage{graphicx}
-\graphicspath{ {figures/} }
+\graphicspath{ {images/} }
 \usepackage{array}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -25,7 +27,7 @@
 \setlength\extrarowheight{6pt}
 
 % Define tab command
-\newcommand\tab{\hspace*{1em}}
+\newcommand\tab{\hspace*{2cm}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -47,9 +49,9 @@ PiSonal Trainer: Weight Lifting Performance Tracker\\
 \maketitle
 \vfill
 \begin{center}
-    Prepared for Computer Science 4ZP6: Capstone Project using the Volere Requirements Specification Template, copyright 1995-2012 the Atlantic Systems Guild Limited. \\
+    Prepared for Computer Science 4ZP6: Capstone Project \\
     Instructor: Dr. Wenbo He
-    Fall/Winter 2016-2017
+    Fall/Winter 2016-2017\\
 \end{center}
 \newpage
 
@@ -68,18 +70,31 @@ PiSonal Trainer: Weight Lifting Performance Tracker\\
 \newpage
 
 \section*{Revision History}
+\begingroup
 \begin{tabular}{ | p{2cm} | p{1.5cm} | p{3.8cm} | p{7cm} |} 
     \hline
     \textbf{Date} & \textbf{Version} & \textbf{Primary Author} & \textbf{Comment}\\
     \hline
-    10/12/2016 & 1.00 & Birunthaa Umamahesan & Blah comment\\
+    10/12/2016 & 1.00 & Micaela Estabillo & Final editing and proofreading for revision 0\\ 
     \hline
-    10/12/2016 & 1.00 & Simarpreet Singh & Blah comment\\ 
+    10/12/2016 & 1.00 & Birunthaa Umamahesan & Update project drivers and project constraints \\
+    \hline
+    10/12/2016 & 1.00 & Simarpreet Singh & Update functional requirements\\ 
+    \hline
+    10/11/2016 & 1.00 & Micaela Estabillo & Adding non-functional requirements\\
     \hline
     10/7/2016 & 1.00 & Micaela Estabillo & Initial skeleton version\\
     \hline
 \end{tabular}
-\captionof{table}{Revision history}
+    \captionof{table}{Revision history}
+\endgroup
+
+
+\begin{center}
+% Volere Edition 16
+We acknowledge that this document uses material from the Volere Requirements Specification Template, copyright © 1995 – 2012 the Atlantic Systems Guild Limited.
+\end{center}
+
 \newpage
 
 \clearpage
@@ -91,39 +106,649 @@ PiSonal Trainer: Weight Lifting Performance Tracker\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Project Drivers}
 \subsection{The Purpose of the Project}
+\subsubsection{The Background of the Project Effort}
+There are many fitness-tracking apps that people use to track their daily fitness routine and dieting habits. However, the available fitness apps and wearables only go as far as keeping track of heartbeat, calories and steps. This may be sufficient for cardiovascular exercises but when it comes to muscle training, it is still common for people to use the traditional method of logging their progress in a book (i.e., a user might log their workout to keep track of the weights they are lifting to evaluate performance). Using this method requires the person to take note of the weight used, the number of repetitions and the sets completed. To date, there is no application that automatically calculates and summarizes a user’s personal record for a specific muscle-training machine, and everyone must make note of their performance after they have completed their workout. 
+
+\subsubsection{Goals of the Project}
+We are going to device a tool that integrates and reports a user's performance on a training machine to a smartphone application. We want to enhance the user's training experience by eliminating the need to manually record their performance.
+
 \subsection{The Stakeholders}
+\subsubsection{The Client}
+The prospective clients for this application will be gym owners or managers who would like to incorporate its functionality into their gym to enhance user experience, and to encourage more clients to sign up for their gym.
+
+\subsubsection{The Customer}
+The PiSonal trainer is designed for gym members, specifically for users who undergo muscle training using weights. It provides gym members the ability to train using weighted equipment without the need to manually track their performance. 
+
+\subsubsection{Other Stakeholders}
+Other stakeholders of this project include:
+\begin{itemize}
+    \item Project supervisor - Dr. Christopher Anand
+    \item Developers and testers – Simarpreet Singh, Micaela Estabillo, Birunthaa Umamahesan
+    \item Beta testers
+    \item Prospective gym owners or managers
+\end{itemize}
+
+\subsubsection{The Hands-On Users of the Product}
+\begin{enumerate}
+    \item \textbf{Gym members/clients}
+    \begin{itemize}
+    \item \textit{Priority}: Key users 
+    \item \textit{User Role}: These users will use the product to perform their workout in view of the camera, use the application to send their performance results to the server, and then view their workout summary using their mobile phone application.
+    
+    \item \textit{Subject Matter Experience}: These users can be categorized as novice, as they do not need prior knowledge of the machines and equipment. The user may be a new trainee at the gym but their fitness routine would not be impacted.
+ 
+    \item \textit{Technological Experience}: The technological experience of the gym members can also be considered novice. The application will require initial training for setting-up the system and performing the routine in front of the application’s camera. There would be no further training required.
+
+    \item \textit{Other user characteristics}: There are some essential characteristics that the user should have in order to successfully use this application:
+    \begin{itemize}
+        \item Should have a smartphone with internet connection
+        \item Fundamental understanding of how to use a smartphone application 
+    \end{itemize}
+    \end{itemize}
+    
+    \item \textbf{Gym Trainers and Managers}
+    \begin{itemize}
+    \item \textit{Priority}: Key users
+    \item \textit{User Role}: These users will use the application to see how well it fits into their business scheme. They will also scope the product with future features and enhancements.
+ 
+    \item \textit{Subject Matter Experience}: These users can be categorized as masters, as they have complete understanding of the functionality of the machines and equipment in the gym.
+ 
+    \item \textit{Technological Experience}: The technological experience of this user can be considered masters. They will be required to know how to function the PiSonal trainers within the gym so they can help support the gym members if required. The only knowledge required would be the initial setup of the system to start training.
+ 
+    \item \textit{Other user characteristics}: There are some essential characteristics that the user should have in order to successfully use this application:
+    \begin{itemize}
+        \item Should have a smartphone with internet connection
+        \item Fundamental understanding of how to use a smartphone application.
+    \end{itemize}
+    \end{itemize}
+    
+    \item \textbf{Developers and Testers}
+    \begin{itemize}
+    \item \textit{Priority}: Secondary users
+    \item \textit{User Role}: These users will develop the application and perform end-to-end system testing. The developers and testers will verify that each use-case and feature in the application works as per the requirement needs.
+ 
+    \item \textit{Subject Matter Experience}: They will have complete knowledge of the business needs and requirements, hence they will be considered masters of this subject.
+ 
+    \item \textit{Technological Experience}: They will be the masters in technological experience. They will know the code structure of the application thoroughly. Also, they will have complete understanding on the application’s infrastructure and other technologies used in the application.
+ 
+    \item \textit{Other user characteristics}:
+    \begin{itemize}
+        \item Advanced knowledge of the code base
+        \item Advanced knowledge of Android and iOS framework
+        \item Assess applications performance and functionality from an engineering perspective
+        \item Complete knowledge of all the use-cases and expected outcomes of the application
+    \end{itemize}
+    \end{itemize}
+\end{enumerate}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PROJECT CONSTRAINTS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Project Constraints}
 
 \subsection{Mandated Constraints}
-\subsubsection{Project philosophy}
-\subsubsection{Implementation environment}
-\subsection{Naming Conventions and Terminology}
-\subsection{Relevant Facts and Assumptions}
+\subsubsection{Solution Constraints}
+\textbf{Constraint} \#: 1
+\raggedright
 
+\textbf{Description}: The application must recognize the gym’s weight via a Quadratic Residue code attached to the weight that must be scanned
+
+\textbf{Rationale}: Provide unique Quadratic Residue codes for each machine to identify which machine/weight is being used. %Should be a simple solution, which supports multiple gyms
+
+\textbf{Fit Criterion}: Must be approved by tester and developer. They must confirm that the weight recognized by the Quadratic Residue code is accurate.
+
+\medskip
+
+\textbf{Constraint} \#: 2
+
+\textbf{Description}: The Quadratic Residue code scanned must activate the camera to recognize the weight being used
+
+\textbf{Rationale}: The application triggers the camera to turn on once it detects the weight via a Quadratic Residue code and recognizes the weight
+
+\textbf{Fit Criterion}: Must be approved by tester and developer. They must confirm that the camera gets activated once the Quadratic Residue code is scanned. 
+
+\medskip
+
+\textbf{Constraint} \#: 3
+
+\textbf{Description}: The data from user’s routine must be sent back and stored
+
+\textbf{Rationale}: The end results of the users training session must be stored to the backend database so the user can retrieve it when required
+
+\textbf{Fit Criterion}: Developers and testers must approve the application. Thorough testing will be done on both platforms.
+
+\medskip
+
+\textbf{Constraint} \#: 4
+
+\textbf{Description}: The application must run on iOS or Android operating system
+
+\textbf{Rationale}: To accomodate both iOS and Android smartphone users
+
+\textbf{Fit Criterion}: Developers and testers must approve the application. Thorough testing will be done on both platforms.
+
+\medskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CONSTRAINT FORMAT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\textbf{Constraint} \#:
+
+%\textbf{Description}:
+
+%\textbf{Rationale}:
+
+%\textbf{Fit Criterion}: 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END CONSTRAINT FORMAT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Implementation Environment of the Current System}
+N/A
+
+\subsubsection{Off-the-Shelf Software}
+\textbf{OpenCV-Python}
+OpenCV-Python is a library used for solving computer vision problems. This library provides a ready-to-use API for image processing algorithms. The PiSonal Trainer camera will leverage this techonology to write specific algorithms to track the motion of the gym equipment.
+
+\textbf{React Native}
+React Native is a framework for building cross-platform mobile applications. Using this framework requires the developer to only write code once while being able to build the application for both Android and iOS. React Native code is written in Javascript.
+The use of this techonology is essential to building the PiSonal Trainer application for the majority of mobile phone users.
+
+%The app will provide a friendly user interface for the gym user to use the PiSonal product from their finger tips.
+
+\subsubsection{Anticipated Workplace Environment}
+The users will be using this application in a gym, where it is typically loud and distracting. Hence, the UI of the application will be designed such that there will be minimal need to read in order to understand. Specifically, the UI will have pictures and graphs with less text so that it is simple and straightforward design. This will make the application user-friendly and simple to use.
+
+\subsubsection{Schedule Constraints}
+The final deadline for the project is April 5th, 2017. The detailed deliverables and their respective deadlines are listed in the following table.\\
+\begingroup
+\begin{centering}
+\begin{tabular}{| p{6cm} | p{6cm} |}
+    \hline
+    \textbf{Deliverable} & \textbf{Date} \\
+    \hline
+    Requirements Document Revision 0 & October 12th, 2016 \\
+    \hline
+    Proof of Concept Plan & October 26th, 2016 \\
+    \hline
+    Test Plan Revision 0 & November 2nd, 2016 \\
+    \hline
+    Proof of Concept Demonstration & November 21st-25th, 2016 \\
+    \hline
+    Design Document Revision 0 & January 11th, 2017 \\
+    \hline
+    Demonstration Revision 0 & February 13th-17th, 2017 \\
+    \hline
+    User’s Guide Revision 0 & March 1st, 2017 \\
+    \hline
+    Test Report Revision 0 & March 22nd, 2017 \\
+    \hline
+    Final Demonstration Revision 1 & Mid-April 2017 \\ 
+    \hline
+    Final Documentation Revision 1 & April 5th, 2017 \\
+    \hline
+
+\end{tabular}
+\captionof{table}{Project Timeline}
+\end{centering}
+\endgroup
+
+%\subsection{Naming Conventions and Terminology}
+%\begin{itemize}
+%    \item Quadratic Residue code: definition.
+%\end{itemize}
+
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % FUNCTIONAL REQUIREMENTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Functional Requirements}
 
 \subsection{The Scope of the Work}
-\subsection{Business Data Model and Data Dictionary}
-\subsection{The Scope of the Product}
-\subsection{Functional Requirements}
-\subsubsection{User requirement}
-\subsubsection{Product and system requirement}
+\subsubsection{The Current Situation}
+There is currently no existing software that tracks muscle training. A system that integrates with gyms and its members' devices is needed in order to track muscle training workouts as they happen. This system will use a camera that is capable of image processing and detecting a user's performance, and an iOS/Android mobile application that can display statistics from the collected data. The mobile application will include data storage, workout history, and a Quadratic Residue code scanner for gym equipment.
 
+\subsubsection{The Context of the Work}
+%TO EDIT: https://www.draw.io/#G0B0cEuI3TKcBbdVRVTHI3ZWM4Ulk
+\begingroup
+\includegraphics[scale=0.75]{ContextOfTheWork}
+\captionof{figure}{Context of the Work}
+\endgroup
+
+
+%\subsubsection{Work Partitioning}
+%\begingroup
+%\captionof{table}{Business Event List}
+%\begin{tabular}{l | l | l}
+%    \textbf{Event Name} & \textbf{Input and Output} & \textbf{Summary of BUC} \\
+%\end{tabular}
+%\endgroup
+
+\subsection{Business Data Model and Data Dictionary}
+\subsubsection{Business Data Model}
+N/A
+%TODO: UML or ERD or "table showing: Class Name, Relationships between classes, Attributes for each class" for this
+
+\subsubsection{Data Dictionary}
+\begingroup
+\begin{centering}
+\begin{tabular}{|p{4cm} | p{6cm} | p{3cm}|}
+    \hline
+    \textbf{Name} & \textbf{Content} & \textbf{Type} \\
+    \hline
+    User & User Identifier & Class \\
+    \hline
+    Exercise & Exercise Identifier & Class \\
+    \hline
+    Equipment & Equipment Identifier & Class \\
+    \hline
+    Weight & Weight Identifier & Class \\
+    \hline
+    Station & Station Identifier & Class \\
+    \hline
+    Quadratic Residue code & Quadratic Residue code Image & Attribute/Element \\
+    \hline
+    User Identifier & Username and Password & Attribute/Element \\
+    \hline
+    Exercise Identifier & Exercise name, Muscle groups, Equipment assigned & Attribute/Element \\
+    \hline
+    Weight Identifier & Weight in pounds, Quadratic Residue code, Equipment assigned & Attribute/Element \\
+    \hline
+    Equipment Identifier & Equipment type, Station assigned & Attribute/Element \\
+    \hline
+    Station Identifier & Camera assigned & Attribute/Element \\
+    \hline
+\end{tabular}
+\captionof{table}{Data Dictionary}
+\end{centering}
+\endgroup
+
+\subsection{The Scope of the Product}
+
+\subsubsection{Product Boundary}
+% TO EDIT: https://www.draw.io/#G0B0cEuI3TKcBbV3ZjbFhFeFdpemc
+\begingroup
+\begin{centering}
+\includegraphics[scale=0.9]{ProductBoundary}
+\captionof{figure}{Product Boundary}
+\end{centering}
+\endgroup
+
+\subsubsection{Product Use Case Table}
+\begingroup
+\begin{centering}
+\begin{tabular}{|p{2cm} | p{4cm} | p{3cm} | p{3cm} |}
+    \hline
+    PUC No & PUC Name & Actor/s & Input \& Output \\
+    \hline
+    1 & Set desired weight & Gym Equipment and User & Quadratic Residue code (in)\\
+    \hline
+    2 & Exercise & Gym & Station camera (in) \\
+    \hline
+    3 & View fitness statistics & User & Mobile phone (out) \\
+    \hline
+    4 & Register for an account & User & Mobile phone (in) \\
+    \hline
+    5 & Log in to an account & User & Mobile phone (in) \\
+    \hline
+\end{tabular}
+\captionof{table}{Product Use Case (PUC) Summary Table}
+\end{centering}
+\endgroup
+
+%\subsubsection{Individual Product Use Cases}
+%TODO: This is where you define the details about the individual product use cases PUCs listed on your PUC table. You can include a scenario or model, for each product use case on your list.
+%Form
+%• A text scenario
+%• A storyboard
+%• A low fi prototype
+%• A hi fi prototype
+%• A formal use case specification including exceptions and alternatives
+% A sequence diagram, activity diagram, dataflow diagram, or any other type of model that is familiar to your project group
+
+%\begin{enumerate}
+%    \item Set desired weight
+%    \item Exercise
+%    \item View fitness statistics
+%    \item Register for an account
+%    \item Log in to an account
+%\end{enumerate}
+
+\newpage
+\subsection{Functional Requirements}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% REQUIREMENT FORMAT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\textbf{Requirement} \#: 1 \tab \textbf{Use Case}:
+%\tab \textbf{Priority}:
+
+%\textbf{Description}: 
+
+%\textbf{Rationale}: 
+
+%\textbf{Fit Criterion}:
+
+%\medskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END REQUIREMENT FORMAT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Requirement} \#: 1 \tab \textbf{Event/Use Case}: 1
+\tab \textbf{Priority}: High
+
+\textbf{Description}: The product’s mobile application shall scan a Quadratic Residue code posted on a gym equipment
+
+\textbf{Rationale}: To be able to capture Quadratic Residue code associated with equipment
+
+\textbf{Fit Criterion}: Product’s mobile application shall use the camera application on the device to take a picture of the Quadratic Residue code.
+
+\medskip
+
+\textbf{Requirement} \#: 2 \tab \textbf{Event/Use Case}: 1
+\tab \textbf{Priority}: High
+
+\textbf{Description}: The product’s mobile application shall be able to identify an equipment’s weight using its Quadratic Residue code
+
+\textbf{Rationale}: To be able to record the equipment’s associated weight
+
+\textbf{Fit Criterion}: Once a Quadratic Residue code is scanned, the application shall be able to identify the weight of an equipment and set it as the current workout weight.
+
+\medskip
+
+\textbf{Requirement} \#: 3 \tab \textbf{Event/Use Case}: 1
+\tab \textbf{Priority}: High
+
+\textbf{Description}: The product’s mobile application shall require a user to first register an account before using the service
+
+\textbf{Rationale}: To identify user within the application
+
+\textbf{Fit Criterion}: Product’s mobile application shall have have a “Create an Account” button which will present a screen containing a registration form when clicked. The user can submit the form using a username, a password and an email address.
+
+\medskip
+
+\textbf{Requirement} \#: 4 \tab \textbf{Event/Use Case}: 1, 4, 5
+\tab \textbf{Priority}: Medium
+
+\textbf{Description}: The product’s mobile application shall provide popup error messages
+
+\textbf{Rationale}: To let the user know that their actions were unexpected and the application did not accept it.
+
+\textbf{Fit Criterion}: The application shall show an error message when (1) the user enters a wrong username or password when trying to login and (2) the user tries to scan a Quadratic Residue code that is not recognized by the system, or (3) the user tries to register using an email or username that already exists in the database.
+
+\medskip
+
+\textbf{Requirement} \#: 5 \tab \textbf{Event/Use Case}: 3
+\tab \textbf{Priority}: High
+
+\textbf{Description}: The product’s mobile application shall display the fitness statistics through visual graphs
+
+\textbf{Rationale}: To summarize a user’s workout history
+
+\textbf{Fit Criterion}: Once logged in, the user sees different types of graphs on the dashboard. Pie graphs shows the percentage of muscle groups the user has worked out in the past. 
+
+\medskip
+
+\textbf{Requirement} \#: 6 \tab \textbf{Event/Use Case}: 2
+\tab \textbf{Priority}: High
+
+\textbf{Description}: The product’s camera shall track the motion of the gym equipment
+
+\textbf{Rationale}: To infer the user's movement and muscle engagement
+
+\textbf{Fit Criterion}: The position of the gym equipment at any point after scanning the Quadratic Residue code shall be known to the application by using computer vision and image processing algorithms.
+
+\medskip
+
+\textbf{Requirement} \#: 7 \tab \textbf{Event/Use Case}: 1, 2, 3
+\tab \textbf{Priority}: High
+
+\textbf{Description}: The product shall be able to store data about the user’s exercises (sets, repetitions and weight) into the database
+
+\textbf{Rationale}: To enable processing and retrieval by the server and mobile application
+
+\textbf{Fit Criterion}: Backend processes shall be able to add a user’s sets, repetitions and weight into the database.
+
+\medskip
+
+\textbf{Requirement} \#: 8 \tab \textbf{Event/Use Case}: 3
+\tab \textbf{Priority}: High
+
+\textbf{Description}: The product shall be able to calculate a user’s workout information using data from the camera and Quadratic Residue code scanner
+
+\textbf{Rationale}: To present workout reports to the user
+
+\textbf{Fit Criterion}: Backend processes shall be able to calculate workout statistics for the user by inferring sets, repetitions and weight from the movement tracked by the camera.
+
+\medskip
+
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % NONFUNCTIONAL REQUIREMENTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Non-functional Requirements}
 \subsection{Look and Feel Requirements}
+
+\subsubsection{Appearance Requirements}
+\textbf{Requirement} \#: 1 \tab \textbf{Event/Use Case}: 3 \tab \textbf{Priority}: Low
+
+\textbf{Description}: The mobile app shall have minimal textual content on each screen
+
+\textbf{Rationale}: To make navigation and easier
+
+\textbf{Fit Criterion}: The product shall enable the user to scan a Quadratic Residue code, workout and then view their statistics by only tapping buttons on the screen instead of typing values such as weight, repetitions or sets.
+
+\medskip
+
+
+\textbf{Requirement} \#: 3 \tab \textbf{Event/Use Case}: 2 \tab \textbf{Priority}: Medium
+
+\textbf{Description}: The cameras shall be non-obtrusive
+
+\textbf{Rationale}: To blend in with the environment
+
+\textbf{Fit Criterion}: The gym owners or managers shall agree that the presence of cameras does not negatively affect the aesthetic of their gym.
+
+\medskip
+
+\subsubsection{Style Requirements}
+
+\textbf{Requirement} \#: 2 \tab \textbf{Event/Use Case}: 3, 4, 5 \tab \textbf{Priority}: Medium
+
+\textbf{Description}: The mobile application shall appear simple to use
+
+\textbf{Rationale}: To reduce the amount of time that users need to record their workout statistics
+
+\textbf{Fit Criterion}: The time it takes for a user scan a Quadratic Residue code and work out shall be less than the time it takes for them to write down their workout type, sets, repetitions and weights.
+
+\medskip
+
 \subsection{Usability and Humanity Requirements}
+
+\subsubsection{Personalization and Internalization Requirements}
+\textbf{Requirement} \#: 1 \tab \textbf{Event/Use Case}: 2, 3 \tab \textbf{Priority}: Medium
+
+\textbf{Description}: The product shall become the user’s preferred tracking method after the trial period
+
+\textbf{Rationale}: To automate tracking workout progress
+
+\textbf{Fit Criterion}: After a trial period of one week, the user shall agree that they would rather use this product than manually track their muscle training progress.
+
+\medskip
+
+\subsubsection{Learning Requirements}
+\textbf{Requirement} \#: 2 \tab \textbf{Event/Use Case}: 1, 2, 3 \tab \textbf{Priority}: Medium
+
+\textbf{Description}: The product shall be easy to learn by users who have never tracked their workouts
+
+\textbf{Rationale}: To show that this product is easily learned and intuitive
+
+\textbf{Fit Criterion}: After a trial period of one week, the rate of errors that the user makes while using the application shall decrease to at most 10\%.
+
+\medskip
+
+\textbf{Requirement} \#: 3 \tab \textbf{Event/Use Case}: 2, 3 \tab \textbf{Priority}: Medium
+
+\textbf{Description}: The product shall be easy to learn by users who have used other methods to track their workouts
+
+\textbf{Rationale}: To make the transition to this product easier
+
+\textbf{Fit Criterion}: After a trial period of one week, the rate of errors that the user makes while using the application shall decrease to at most 5\%.
+
+\medskip
+
 \subsection{Performance Requirements}
+
+\subsubsection{Capacity Requirements}
+
+\textbf{Requirement} \#: 1 \tab \textbf{Event/Use Case}: 1, 3, 4, 5 \tab \textbf{Priority}: Medium
+
+\textbf{Description}: The mobile application shall be concurrently used by multiple users on their devices
+
+\textbf{Rationale}: To enable multiple users to monitor their workouts at the same time
+
+\textbf{Fit Criterion}: The application's output shall not be affected by the number of users currently using it.
+
+\medskip
+
+\subsubsection{Scalability or Extensibility Requirements}
+\textbf{Requirement} \#: 2 \tab \textbf{Event/Use Case}: 2 \tab \textbf{Priority}: High
+
+\textbf{Description}: Each camera shall be able to track at least one user at any time
+
+\textbf{Rationale}: To associate each user to their corresponding movement
+
+\textbf{Fit Criterion}: The camera shall give an accurate count of moving objects in the screen (at least one when there is someone working out).
+
+\medskip
+
 \subsection{Operational and Environmental Requirements}
+\subsubsection{Expected Physical Environment}
+\textbf{Requirement} \#: 1 \tab \textbf{Event/Use Case}: 1, 2 \tab \textbf{Priority}: High
+
+\textbf{Description}: The product shall be used in a well-lit environment
+
+\textbf{Rationale}: To enable the cameras to see their subjects
+
+\textbf{Fit Criterion}: The gym shall have enough lighting such that objects in the video can be tracked and Quadratic Residue codes can be scanned.
+
+\medskip
+
+\textbf{Requirement} \#: 4 \tab \textbf{Event/Use Case}: 3, 4, 5 \tab \textbf{Priority}: Medium
+
+\textbf{Description}: The mobile device shall have access to the internet
+ 
+\textbf{Rationale}: To send and receive data from the server and the database
+
+\textbf{Fit Criterion}: The mobile device shall be able to send at least one message through an internet connection.
+
+\medskip
+
+\subsubsection{Requirements for Interfacing with Adjacent Systems}
+\textbf{Requirement} \#: 2 \tab \textbf{Event/Use Case}: 1 \tab \textbf{Priority}: Low
+
+\textbf{Description}: The weight trackers shall minimally affect the weight of the objects onto which they are attached
+
+\textbf{Rationale}: To keep the weight of the equipment as precise as possible
+
+\textbf{Fit Criterion}: The equipment shall weigh up to 0.5\% pounds more than its advertised weight when the Quadratic Residue code is attached to it.
+
+\medskip
+
 \subsection{Maintainability and Support Requirements}
+\subsubsection{Maintenance Requirements}
+\textbf{Requirement} \#: 1 \tab \textbf{Event/Use Case}: 2 \tab \textbf{Priority}: High
+
+\textbf{Description}: Gym employees such as trainees or managers shall be responsible for making sure the cameras work
+
+\textbf{Rationale}: To enable the movement-tracking camera through connecting it to power and to the network
+
+\textbf{Fit Criterion}: The camera shall be able to transmit data over the internet.
+
+\medskip
+
+\textbf{Requirement} \#: 2 \tab \textbf{Event/Use Case}: 1 \tab \textbf{Priority}: High
+
+\textbf{Description}: Gym employees such as trainees or managers shall be responsible for making sure each piece of equipment has a Quadratic Residue code
+
+\textbf{Rationale}: To make sure that equipment is identifiable by mobile application
+
+\textbf{Fit Criterion}: Each equipment shall have exactly one attached Quadratic Residue code.
+
+\medskip
+
+\subsubsection{Adaptability Requirements}
+
+\textbf{Requirement} \#: 3 \tab \textbf{Event/Use Case}: 1, 3, 4, 5 \tab \textbf{Priority}: Medium
+
+\textbf{Description}: The mobile application shall be easily portable from Android to iOS
+
+\textbf{Rationale}: To make the product available to most mobile phone users
+
+\textbf{Fit Criterion}: The application shall be developed and tested for both Android and iOS
+
+\medskip
+
 \subsection{Security Requirements}
+\subsubsection{Access Requirements}
+\textbf{Requirement} \#: 1 \tab \textbf{Event/Use Case}: 1, 3, 5 \tab \textbf{Priority}: Low
+
+\textbf{Description}: The product shall notify customers of changes to its information policies
+
+\textbf{Rationale}: To make sure that the user knows how their data is protected
+
+\textbf{Fit Criterion}: The product shall use a popup that appears upon opening the application after the User Agreement Policy changes. This popup shall prevent the user from accessing the its functions unless they read and accept the User Agreement Policy.
+
+\medskip
+
+\subsubsection{Integrity Requirements}
+\textbf{Requirement} \#: 2 \tab \textbf{Event/Use Case}: 1 \tab \textbf{Priority}: Medium
+
+\textbf{Description}: The mobile application shall prevent unrecognized Quadratic Residue codes from being logged into the database
+
+\textbf{Rationale}: To enable the product to properly identify exercises and equipment
+
+\textbf{Fit Criterion}: The application shall reject QR codes that are not recognized by the server or database. On the other hand, the application shall accept QR codes that are recognized.
+
+\medskip
+
+
+\textbf{Requirement} \#: 3 \tab \textbf{Event/Use Case}: 2 \tab \textbf{Priority}: Medium
+
+\textbf{Description}: The product shall not store videos or images of users’ workouts in any form
+
+\textbf{Rationale}: To protect the privacy of users
+
+\textbf{Fit Criterion}: The image processing algorithms shall be directly applied to captured images in the camera feed, thereby storing no videos in the database.
+
+\medskip
+
+\subsubsection{Privacy Requirements}
+\textbf{Requirement} \#: 4 \tab \textbf{Event/Use Case}: 3, 5 \tab \textbf{Priority}: High
+
+\textbf{Description}: Users shall only be able to view workout data that pertains to them
+
+\textbf{Rationale}: To protect the privacy of other users
+
+\textbf{Fit Criterion}: The product shall allow the user to only view their own workout statistics.
+
+\medskip
+
+\textbf{Requirement} \#: 5 \tab \textbf{Event/Use Case}: 2 \tab \textbf{Priority}: High
+
+\textbf{Description}: Users shall be informed that a camera will be tracking their movement during their workouts
+
+\textbf{Rationale}: To let users know that their image is being scanned and that their data is sent over a network
+
+\textbf{Fit Criterion}: There shall be a separate agreement clause in which the user will verify they consent to being photographed in order to use the product.
+
+\medskip
+
 \subsection{Cultural Requirements}
+N/A
 \subsection{Legal Requirements}
+N/A
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -131,14 +756,35 @@ PiSonal Trainer: Weight Lifting Performance Tracker\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Project Issues}
 \subsection{Open Issues}
+Our implementation consists of creating an entirely new product for fitness training applications. There have previously been no significant efforts to implement this functionality, wherein image recognition is utilised to automatically record a user's performance. There are also no open issues outside of implementing this product.
+
 \subsection{Off-the-Shelf Solutions}
+N/A
+
 \subsection{New Problems}
+Our contribution is completely new; there are no products currently in the market that implement the same functionality. Hence, there are no new problems to consider. 
+
 \subsection{Tasks}
+\begin{itemize}
+    \item Propose design solution to the project supervisor
+    \item Implement the solution and provide the source code to the project supervisor for review
+    \item Update design to incorporate suggestions and merge changes to main PiSonal trainer repository once tasks have been successfully completed
+\end{itemize}
+
 \subsection{Migration to the New Product}
+N/A
+
 \subsection{Risks}
+As this is a new product, there are no risks that can impact the project in terms of old code. All the tests will be based on the new requirements and desired  product functionality.
+
 \subsection{Costs}
+There are no costs involved in the implementation of PiSonal trainer. All the technology to be used is open source; hence there are no expenses incurred.
+
 \subsection{User Documentation and Training}
+User documentation will accompany a brief explanation concerning how PiSonal trainer works and how users can use it to enhance their training experience. PiSonal trainer requires minimal input from the user. However each input will be explained through a step-by-step tutorial to help setup the application. The User Documentation will include several visuals to help the user comprehend what the application's interface should look like from beginning to end. 
+
 \subsection{Waiting Room}
+Our project consists of implementing a new application. There are no other features that have been out of scope for this project as our requirements have been scoped to satisfy the main needs for the initial release. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % REFERENCES

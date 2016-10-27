@@ -1,0 +1,91 @@
+
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{enumerate}
+% Display only levels as deep as subsection in tableofcontents
+\setcounter{tocdepth}{2}
+
+\usepackage{caption}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{array}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% HEADER
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{PiSonal Trainer: Weight Lifting Performance Tracker}
+\fancyfoot[L]{Proof of Concept Plan}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Use this to pad tables
+\usepackage{array}
+\setlength\extrarowheight{6pt}
+
+% Define tab command
+\newcommand\tab{\hspace*{2cm}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{
+PiSonal Trainer: Weight Lifting Performance Tracker\\
+\Large {Proof of Concept Plan}
+}
+\date{October 26, 2016}
+\author{Birunthaa Umamahesan \and Micaela Estabillo \and Simarpreet Singh}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DOCUMENT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\thispagestyle{plain}
+\pagenumbering{gobble}
+\maketitle
+%\vfill
+
+%\begin{center}
+%    Prepared for Computer Science 4ZP6: Capstone Project \\
+%    Instructor: Dr. Wenbo He
+%    Fall/Winter 2016-2017\\
+%\end{center}
+
+\section*{Significant Risks}
+The majority of the risks associated with PiSonal Trainer relate to the implementation and hardware quality, specifically:
+\begin{enumerate}
+    \item Implementation
+    \begin{itemize}
+        \item Detection of movement may not be accurate although the object is recognized in the image
+        \item Designing an effective database schema
+    \end{itemize}
+    \item Camera
+    \begin{itemize}
+        \item Object detection depends on how well markers are displayed in the image. Three aspects of the objects in relation to the camera are significant:
+        \item Low image resolution may impact the object recognition in videos, thereby causing inaccurate results
+        \item Colour used to track objects needs to stand out in order to be detected and differentiated from other objects in the camera’s view
+        \item Distance of objects from the camera may negatively affect object detection
+    \end{itemize}
+    \item Other 
+    \begin{itemize}
+        \item Ensuring privacy of user information
+        \item Assuming the server will be running at all times, its reliability is a significant risk
+        \item Technologies used for implementing and hosting the application may be costly
+    \end{itemize}
+\end{enumerate}
+
+\section*{Demonstration Plan}
+For our proof of concept demonstration, we will create a prototype of PiSonal Trainer to show that the previously mentioned risks can be overcome. The demonstration will include key components of the project, specifically:
+\begin{itemize}
+    \item Object detection using OpenCV and a Macbook webcam. We will use algorithms (written in Python) to demonstrate that the camera-related risks can be mitigated under specific constraints. The constraints include minimal resolution required for images, colour and general appearance of object trackers, and maximum distance of trackable object from camera.
+    \item A partial implementation of the algorithm which counts movement repetitions based on image recognition of the camera.
+    \item Semi-finalized list of technologies which will be used in our final product, and a plan for interfacing them with each other. Categories include database service, server hosting platform, and libraries, among others.
+\end{itemize}
+
+\end{document}
+

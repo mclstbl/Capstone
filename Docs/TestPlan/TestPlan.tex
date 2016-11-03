@@ -1,0 +1,719 @@
+ss{article}
+\usepackage[utf8]{inputenc}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{enumerate}
+% Display only levels as deep as subsubsection in tableofcontents
+\setcounter{tocdepth}{3}
+\usepackage{caption}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{array}
+\usepackage{mdframed}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% HEADER
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{PiSonal Trainer: Weight Lifting Performance Tracker}
+\fancyfoot[L]{Test Plan}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Use this to pad tables
+\usepackage{array}
+\setlength\extrarowheight{6pt}
+
+% Define tab command
+\newcommand\tab{\hspace*{2cm}}
+
+% Define environment for test case format
+\newenvironment{testcase}
+    {
+    \begin{center}
+    \begin{mdframed}[
+        userdefinedwidth=15.5cm,
+        leftmargin=1cm,
+        rightmargin=1cm
+        ]
+    \begin{tabular}{p{2.5cm} p{9cm}}
+    }
+    {
+    \end{tabular}
+    \end{mdframed}
+    \end{center}
+    }
+
+% Define test case commands
+\newcommand{\tctit}[2]{\textbf{#1} & \textbf{#2}}
+\newcommand{\tcdesc}{\textbf{Description:}}
+\newcommand{\tctype}{\textbf{Type:}}
+\newcommand{\testers}{\textbf{Tester(s):}}
+\newcommand{\tcinit}{\textbf{Initial State:}}
+\newcommand{\tcin}{\textbf{Input:}}
+\newcommand{\tcout}{\textbf{Output:}}
+\newcommand{\tcpass}{\textbf{Pass:}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{
+PiSonal Trainer: Weight Lifting Performance Tracker\\
+\Large {Test Plan Version 0}
+}
+\date{November 2, 2016}
+\author{Birunthaa Umamahesan \and Micaela Estabillo \and Simarpreet Singh}
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% COVER PAGE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\maketitle
+\thispagestyle{empty}
+\vfill
+\begin{center}
+    Prepared for Computer Science 4ZP6: Capstone Project \\
+    Instructor: Dr. Wenbo He
+    Fall/Winter 2016-2017\\
+\end{center}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TABLE OF CONTENTS AND REVISION HISTORY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tableofcontents
+
+\listoftables
+
+%\listoffigures
+
+\section*{Revision History}
+\begingroup
+\begin{tabular}{ | p{2cm} | p{1.5cm} | p{3.8cm} | p{7cm} |} 
+    \hline
+    \textbf{Date} & \textbf{Version} & \textbf{Primary Author} & \textbf{Comment}\\
+    \hline
+    28/10/2016 & 1.00 & Micaela Estabillo & Created document and drafted system testing section\\ 
+    \hline
+    31/10/2016 & 1.00 & Birunthaa Umamahesan & Drafted overview section and non-functional test plan\\
+    \hline
+    01/11/2016 & 1.00 & Simarpreet Singh & Drafted proof of concept testing and functional requirements test plan \\
+    \hline
+    02/11/2016 & 1.00 & Micaela Estabillo & Final editing and proofreading for revision 0\\
+    \hline
+\end{tabular}
+    \captionof{table}{Revision history}
+\endgroup
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% GENERAL INFORMATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Overview}
+The purpose of this document is to provide a detailed plan for the testing of the application  Pi-Sonal Trainer. The following brief outline gives an overview of what is covered in this document:
+\begin{itemize}
+    \item A proof of concept test is described in \textbf{section 2}
+    \item The set of tests used in testing the system is described in \textbf{section 3}.
+    \item The set of tests used to ensure that the software requirements specifications are met is described in \textbf{section 4}.
+    \item A timeline of the test plan is given in \textbf{section 5}. 
+\end{itemize}
+
+\begingroup
+\begin{testcase}
+    \tctit{Test \# :}{Test name} \\
+    \tcdesc & A description of what is being tested \\
+    \tctype & The type of test \\
+    \testers & The people who will run manual test \\
+    \textbf{Initial State:} & The initial state of the system being tested \\
+    \textbf{Input:} & The input that will change the state of the system \\
+    \textbf{Output:} & The relevant output that is checked \\
+    \tcpass & The description of the pass criteria for test\\
+\end{testcase}
+\captionof{table}{Test Case Format}
+\endgroup
+
+\subsection{Automated Testing}
+ Automated testing will be used for testing the application’s system, specifically the backend processing of data and transmitting it to the mobile application. The automated testing will encompass both unit testing and coverage analysis. The test cases have been created such that unit testing can be performed on independent components of the application, allowing testing to run alongside the development of the application.
+ 
+\subsubsection{Testing Tools}
+The software tools that will be used to perform the automated testing are listed in the following table.
+
+\begingroup
+\begin{tabular}{ | p{3cm} | p{5cm} | p{5cm} |} 
+    \hline
+    \textbf{Tool} & \textbf{Description} & \textbf{Use}\\
+    \hline
+    UnitTests & Python unit testing framework& Unit testing \\
+    \hline
+    Nose & Python test coverage analyzer & Analysis of unit test coverage\\
+    \hline
+\end{tabular}
+\captionof{table}{List of Testing tools}
+\endgroup
+
+\subsection{Manual Testing} 
+Manual tests will be conducted throughout the development of the application. It will be used for testing the application where automation testing is not feasible or efficient. The developers will carry out these tests as part of their development process. 
+
+\subsubsection{User Experience Testing} 
+Manual testing will also be used to assess the overall user experience of the application. The user experience testing will be conducted by allowing a group of individuals who were not involved in the development of the application to complete end-to-end testing of the application. The testers will be given a copy of the application and will be asked to provide feedback. The same individuals will be asked to complete the test twice; once in mid-February and once in mid-March. This will allow us to implement the feedback provided in February and re-test to see if the changes meet users' expectations. 
+
+\subsection{List of Constants} 
+\begingroup
+\begin{center}
+\begin{tabular}{ | p{3cm} | p{3cm} | p{5cm} |} 
+    \hline
+    \textbf{Constant} & \textbf{Value} & \textbf{Description}\\
+    \hline
+    $\alpha$ & 99\% & Test coverage target \\
+    \hline
+    $\beta$ & 8 & Number of testers\\
+    \hline
+    $\lambda$ & 20\% & Phase II testing improvement target\\
+    \hline
+     $\gamma$ & 1\% & Counter increment for repetition and set count.\\
+    \hline
+\end{tabular}
+\end{center}
+\captionof{table}{List of constants}
+\endgroup
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PROOF OF CONCEPT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Proof of Concept Testing}
+Proof of Concept testing is key process to be carried out before the development of a project. In this section we will be discussing the proof of concept test regarding significant risks, demonstration plan, and the proof of concept test plan.
+\subsection{Significant Risks}
+The successful completion of the project depends on overcoming the following significant risks:
+    \begin{itemize}
+        \item In order for the project to be completed it must be reliable, which means it must be accurate while counting the repetitions of the exercise. There is a significant risk of project to fail if the implementation of detecting movement is not accurate.
+        \item The product requires to give a quick feedback on the user's phone once a user finishes a set. The phone would show the amount of repetition a user has completed. Designing an effective database schema would enhance the processing time between storing user data and showing it to the user. It would also lower a significant risk of errors while storing data in using an inefficient database schema.
+        \item The completion of the final product relies on the camera. The camera play a huge role in the success of the project because it is used to detect the motion of the user. The camera also presents a significant risk of undetectable objects due to low resolution image feed, use of tracked markers that have standard colours in particular environment, large amount of distance between a detectable object and the camera.
+        \item The success of this project also depends on the trust users will have on this project. Losing a the trust may lead to the failure of this project, that is why privacy of user information is a significant risk.
+        \item Accessibility of the product is also required for the completion of this project. Thus, having an uptime service of 99.9\% is essential. Such expectations presents a significant risk of having the server downtime due overload or a bug.
+    \end{itemize}
+\subsection{Demonstration Plan}
+For proof of concept we will be implementing a simple algorithm as a prototype to track the movement of a dumbbell in a hand. As the hand moves up and down the program will count the repetition of bicep curls. We will be using the camera of our laptops to demonstrate this plan. The scope of this plan is limited to demonstrating that the significant risks can be overcome. 
+
+As a user does bicep curls in front of the laptop our prototype will count repetitions of the exercise. This will provide the proof of accuracy in counting the repetitions. This prototype will give a good understanding of the minimum resolution of an image that is required for the final product to actually detect objects. It will also provide us a proof that the movement of objects with large distances from the camera is detectable.
+
+The prototype will also consist of a backend server. The backend server will consist of a database with a well designed schema. The backend server will be extensively tested by hitting it with mock requests to demonstrate that it can overcome significant risks like high processing time and downtime during an overload.
+\subsection{ Proof of Concept Test}
+The proof of concept is given in test case format to adhere with the presentation of the other test in this document.
+\begingroup
+\begin{testcase}
+    \tctit{Test 2.3.1:}{Proof of Concept} \\
+    \tcdesc & Tests whether significant risk to the completion of the project can be overcome.\\
+    \tctype & Proof of Concept (manual)\\
+    \testers & Gym users and/or prototype developers \\
+    \tcpass & Successful detection of objects in different scenarios and a stable backend with little processing time and 99.9% uptime. \\
+\end{testcase}
+\endgroup
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SYSTEM TESTING
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{System Testing}
+Each component of the project will be tested using black-box techniques through automated unit testing and manual user input. Test coverage tools will also be utilised to identify portions of code that lack unit tests. After each component is tested, they will be verified as one integrated system. The individual components to be tested are object detection, counting algorithms, database and backend server operations, and the mobile application interface; the specific test cases are defined in this section.
+
+\subsection{Object Detection}
+Manual user testing will be used as the primary method for testing object detection using a camera. Equivalent unit tests with mocked input values will also be used to test the software. The following test cases relate to the software’s ability to recognize an object and to retrieve its location.
+
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 3.1.1:}{Detect a non-moving marker} \\
+    \tcdesc & Tests if objects are detected when they are not moving\\
+    \tctype & Functional (dynamic, manual) \\
+    \testers & Software developers \\
+    \tcinit & Camera is powered on and connected to software \\
+    \tcin & A stationary object within the camera’s view \\
+    \tcout & A value representing the object's position \\
+    \tcpass & Position for marker is detected \\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 3.1.2:}{Detect a moving marker} \\
+    \tcdesc & Tests whether multiple position values representing object's path can be tracked\\
+    \tctype & Functional (dynamic, manual) \\
+    \testers & Software developers \\
+    \tcinit & Camera is powered on and connected to software \\
+    \tcin &  Simulate an object moving within the camera’s view \\
+    \tcout & A set of values representing the object’s path \\
+    \tcpass & Multiple positions for marker are detected \\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 3.1.3:}{Do not detect when there are no markers}\\
+    \tcdesc & Tests whether the camera software can distinguish between marker and the environment \\
+    \tctype & Functional (dynamic, manual) \\
+    \testers & Software developers \\
+    \tcinit & Camera is powered on and connected to software \\
+    \tcin & A view in which there is no marker \\
+    \tcout & No marker position \\
+    \tcpass & No positions for markers are detected \\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 3.1.4:}{Handle multiple markers in a single frame} \\
+    \tcdesc & Tests whether the camera software can detect and distinguish between multiple markers in a single frame \\
+    \tctype & Functional (dynamic, manual) \\
+    \testers & Software developers \\
+    \tcinit & Camera is powered on and connected to software \\
+    \tcin & A view wherein more than one markers are present \\
+    \tcout & Sets of position values for each marker \\
+    \tcpass & The number of sets of position values match the number of markers \\
+\end{testcase}
+\endgroup
+
+\subsection{Counting Algorithm}
+Unit testing will be the main method of testing the movement-counting algorithms. The following test cases relate to the software’s ability to detect patterns in the object’s movement and record corresponding repetition and set counts.
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 3.2.1}{Count one repetition of each defined movement} \\
+    \tcdesc & Tests whether a repetition based on changes in object's position value over time can be inferred\\
+    \tctype & Unit (dynamic, automated), Manual \\
+    \testers & Software developers \\
+    \tcinit & Object is not moving \\
+    \tcin & Object moves to perform one repetition \\
+    \tcout & Repetition count\\
+    \tcpass & Repetition count is equal to one\\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 3.2.2}{Count multiple repetitions of each defined movement} \\
+    \tcdesc & Tests if multiple exercise repetitions based on object's position values over time can be counted\\
+    \tctype & Unit (dynamic, automated), Manual \\
+    \testers & Software developers \\
+    \tcinit & Object is not moving  \\
+    \tcin & Object moves to perform multiple repetitions \\
+    \tcout & Repetition count\\
+    \tcpass & Repetition count is equal to the number of performed repetitions \\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 3.2.3}{Determine the end of a set} \\
+    \tcdesc & Tests to see when a set is considered finished based on whether the object has stopped moving for a given amount of time \\
+    \tctype & Unit (dynamic, automated), Manual \\
+    \testers & Software developers \\
+    \tcinit & Object is moving \\
+    \tcin & Object stops moving for at least one minute \\
+    \tcout & Set count \\
+    \tcpass & The set count increased by 1 \\
+\end{testcase}
+\endgroup
+
+\subsection{Database Manipulation and Backend Server Operations}
+Unit and manual testing will be used to verify performance and scalability of the application’s database and server. The following test cases relate to the software’s ability to adapt to different loads, interruptions and failures during typical execution.
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 3.3.1:}{Store data for single user} \\
+    \tcdesc & Tests if server is able to store data for a single user on the database \\
+    \tctype & Unit (dynamic, automated) \\
+    \testers & Software developers \\
+    \tcinit & The database contains a schema for the application\\
+    \tcin & Server inserts a row into database \\
+    \tcout & Database status notification \\
+    \tcpass & The database contains the new data inserted\\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+\tctit{Test 3.3.2:}{Load data for single user} \\
+    \tcdesc & Tests if server is able to load data for a single user from the database \\
+    \tctype & Unit (dynamic, automated) \\
+    \testers & Software developers \\
+    \tcinit & The database contains rows of data pertaining to user \\
+    \tcin & Server is used to query user data \\
+    \tcout & Data is returned \\
+    \tcpass & The data returned matches what is expected \\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+\tctit{Test 3.3.3:}{Store data for multiple users} \\
+    \tcdesc & Tests whether the database and server are able to handle large loads of insert requests\\
+    \tctype & Unit (dynamic, automated) \\
+    \testers & Software developers \\
+    \tcinit & Database has enough space for at least 200 more entries \\
+    \tcin & Scripts that add values (200 in total) to database are executed at the same time \\
+    \tcout & Database status notification for each insertion \\
+    \tcpass & All insertions succeed and database values are inserted as expected \\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+\tctit{Test 3.3.4:}{Load data for multiple users} \\
+    \tcdesc & Tests whether the database and server are able to handle large loads of select requests\\
+    \tctype & Unit (dynamic, automated) \\
+    \testers & Software developers \\
+    \tcinit & Database contains at least 200 rows added by a script\\
+    \tcin & Scripts that retrieve values from database and load them on the server are executed at the same time \\
+    \tcout & Data is returned \\
+    \tcpass & The data returned matches the 200 rows added by a script \\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+\tctit{Test 3.3.5:}{Database operation interrupted by network outage} \\
+\tcdesc & Tests how the system mitigates unexpected network disconnection and recovers data \\
+\tctype & Functional (dynamic, manual) \\
+\testers & Software developers \\
+\tcinit & Database statement is ready for execution \\
+\tcin & Kill server's connection to database \\
+\tcout & Failure notification, data is not sent or received \\
+\tcpass & Server intermittently retries operation until timeout or a network connection is restored \\
+\end{testcase}
+\endgroup
+
+\subsection{Mobile Application Interface}
+Manual testing will be used to verify usability of the software’s mobile user interface; other aspects of the mobile app is tested during system integration. The following test cases relate to the mobile app’s ability to react to user manipulation and various errors.
+
+\begingroup
+\begin{testcase}
+\tctit{Test 3.4.1:}{Scan QR code} \\
+\tcdesc & Test whether the scanning software recognizes image input \\
+\tctype & Functional (dynamic, manual) \\
+\testers & Software developers \\
+\tcinit & A QR code that is associated with a weight machine and a phone with scanner software\\ \tcin & Phone scans QR code \\
+\tcout & Scanner notification \\
+\tcpass & Phone scanner notification indicates successful recognition \\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+\tctit{Test 3.4.2:}{Scan QR code that is not recognized by the application} \\
+\tcdesc & Test whether the scanning software distinguishes between QR codes associated with gym equipment and all other QR codes \\
+\tctype & Functional (dynamic, manual) \\
+\testers & Software developers \\
+\tcinit & A QR code that is not associated with a weight machine and a phone with scanner software\\
+\tcin & Phone scans QR code \\
+\tcout & Scanner notification\\
+\tcpass & Phone scanner notification indicates successful scan but failed recognition \\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+\tctit{Test 3.4.3:}{Scan QR code that is recognized by the application, but is distorted} \\
+\tcdesc & Test whether the scanning software can recognize QR codes after some wear \\
+\tctype & Functional (dynamic, manual) \\
+\testers & Software developers \\
+\tcinit & A worn out QR code that is associated with a weight machine and a phone with scanner software\\
+\tcin & Phone scans QR code\\
+\tcout & Scanner notification\\
+\tcpass & Phone scanner notification indicates successful recognition \\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+\tctit{Test 3.4.4:}{Pop up error messages} \\
+\tcdesc & Tests whether the app prevents unwanted actions when user enters wrong credentials, scans unrecognized QR or tries to register with a duplicate email \\
+\tctype & Functional (dynamic, manual) \\
+\testers & Software developers \\
+\tcinit & Mobile login/registration and QR code scanner are implemented \\
+\tcin & Perform unexpected action as specified in \textit{Description}\\
+\tcout & Pop up error message\\
+\tcpass & Error message appears and prevents access to other pages until it is acknowledged or issue is resolved \\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+\tctit{Test 3.4.5:}{Update visualizations of user’s performance when requested} \\
+\tcdesc & Tests whether user performance charts are updated as soon as they log new workouts\\
+\tctype & Functional (dynamic, manual) \\
+\testers & Software developers \\
+\tcinit & A workout has just been logged \\
+\tcin & Navigate to the data visualizations page\\
+\tcout & Graphs and actionable data is presented\\
+\tcpass & The data includes the latest workout logged by the user\\
+\end{testcase}
+\endgroup
+
+\newpage
+\subsection{System Integration}
+Interactions between the first four systems will be tested using manual testing. The specific test cases are outlined in this subsection.
+
+\begingroup
+\begin{testcase}
+\tctit{Test 3.5.1:}{Camera capture should not start until after a QR code is scanned and user logs in} \\
+\tcdesc & Tests whether the mobile app, server and camera are able to communicate and control access\\
+\tctype & Functional (dynamic, manual) \\
+\testers & Software developers \\
+\tcinit & Mobile app, camera and server are connected via a network, and user has logged in but has not scanned QR code\\
+\tcin & Object moves \\
+\tcout & Set of position values\\
+\tcpass & No position values are recorded \\
+\end{testcase}
+\endgroup
+
+
+\begingroup
+\begin{testcase}
+\tctit{Test 3.5.2:}{Require user registration before using the app} \\
+\tcdesc & Tests whether app prevents data from being inserted into database unless it is associated with a user \\
+\tctype & Functional (dynamic, manual) \\
+\testers & Software developers \\
+\tcinit & Mobile app login and registration page are implemented \\
+\tcin & Attempt to see the menu and other functions \\
+\tcout & Error message\\
+\tcpass & Error message appears and prevents access to other pages until user logs in or registers \\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+\tctit{Test 3.5.3:}{Logged workouts should be instantaneously available as visualizations on mobile app} \\
+\tcdesc & Tests how fast the camera sends data to server and back to the user's phone \\
+\tctype & Unit (dynamic, automated) \\
+\testers & Software developers \\
+\tcinit & Workout logging has finished and set/rep counts are ready for transmission \\
+\tcin & Mobile app is used to save the session \\
+\tcout & Data visualizations are generated for viewing\\
+\tcpass & There is a maximum of 200 ms delay between saving a workout session and having the statistics included in the data visualizations\\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+\tctit{Test 3.5.1:}{Mobile app should cache a user’s latest statistics} \\
+\tcdesc & Tests whether the system is able to recover user's latest session in case of unexpected failures that prevent data from being uploaded to server for storing in the database \\
+\tctype & Unit (dynamic, automated) \\
+\testers & Software developers \\
+\tcinit & Workout logging has finished and set/rep counts are ready for transmission \\
+\tcin & Mobile app is used to save the session but a power/network interruption is triggered \\
+\tcout & Database status\\
+\tcpass & Session saving fails and database is not updated, but the data is cached on the mobile phone \\
+\end{testcase}
+\endgroup
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% REQUIREMENTS TESTING
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Requirements Testing}
+\subsection{Functional Requirements Testing}
+The following tests will be performed to ensure adherence of the functional requirements stated in the software requirements specification. 
+\begingroup
+\begin{testcase}
+    \tctit{Test 4.1.1:}{Input workout data testing} \\
+    \tcdesc & To make sure the user can manually log workouts using the PiSonal Trainer App.\\
+    \tctype & Functional (dynamic, manual)\\
+    \testers & Users \\
+    \tcpass & Users can log their workouts manually \\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 4.1.2:}{Output of workout statistics testing} \\
+    \tcdesc & To make sure the user can view their workout statistics using the PiSonal Trainer App.\\
+    \tctype & Functional (dynamic, manual)\\
+    \testers & Users \\
+    \tcpass & Users can view their workout statistics \\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 4.1.3:}{Getting fitness data from the server testing} \\
+    \tcdesc & To make sure the PiSonal Trainer app can receive fitness data from the backend server.\\
+    \tctype & Functional (dynamic, manual)\\
+    \testers & Software developers  \\
+    \tcpass & The PiSonal Trainer app can receive fitness data from the server in the background. \\
+\end{testcase}
+\endgroup
+\begingroup
+\begin{testcase}
+    \tctit{Test 4.1.4:}{Requesting fitness data from the server testing} \\
+    \tcdesc & To make sure the PiSonal Trainer app can send a request to receive fitness data to the backend server.\\
+    \tctype & Functional (dynamic, manual)\\
+    \testers & Software developers \\
+    \tcpass & The PiSonal Trainer app can send a request to receive fitness data to the server in the background. \\
+\end{testcase}
+\endgroup
+\begingroup
+\begin{testcase}
+    \tctit{Test 4.1.5:}{Transmitting repetition count from the camera to the server esting} \\
+    \tcdesc & To make sure the camera software is able to transmit the count of repetitions to the backend server.\\
+    \tctype & Functional (dynamic, manual)\\
+    \testers & Software developers  \\
+    \tcpass & Camera software is able to transmit the count of repetitions to the backend server \\
+\end{testcase}
+\endgroup
+\begingroup
+\begin{testcase}
+    \tctit{Test 4.1.6:}{Reading data from the database testing} \\
+    \tcdesc & To make sure the backend server can extract/read data from the database on demand.\\
+    \tctype & Functional (dynamic, manual)\\
+    \testers & Software developers  \\
+    \tcpass & Backend server can extract/read data from the database on demand. \\
+\end{testcase}
+
+\endgroup
+\begingroup
+\begin{testcase}
+    \tctit{Test 4.1.7:}{Writing data to the database testing} \\
+    \tcdesc & To make sure the backend server can insert/write data to the database on demand.\\
+    \tctype & Functional (dynamic, manual)\\
+    \testers & Software developers  \\
+    \tcpass & Backend server can insert/write data to the database on demand \\
+\end{testcase}
+\endgroup
+
+
+\subsection{Non-Functional Requirements Testing}
+The following tests will be carried out to ensure completeness and accuracy of the non-functional requirements given in the software requirements specification. 
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 4.2.1:}{Textual content on the screen check} \\
+    \tcdesc & The mobile application uses minimal textual content on each screen\\
+    \tctype & Functional (dynamic, manual)\\
+    \testers & Software developers \\
+    \tcpass & Textual content on the application is only 20\%\\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 4.2.2:}{Application simple to use} \\
+    \tcdesc & The mobile application must be simple to use\\
+    \tctype & Functional (dynamic, manual)\\
+    \testers & Software developers \\
+    \tcpass & The time taken for users to use the application must be less than the time for manual entry of their work out.\\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 4.2.3:}{Capacity check} \\
+    \tcdesc & The mobile application must be used concurrently by multiple users on their devices\\
+    \tctype & Functional (dynamic, manual)\\
+    \testers & Software developers\\
+    \tcpass & The applications output must not be impacted by the number of users currently using it.\\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 4.2.4:}{Scalability and Extensibility} \\
+    \tcdesc & The camera should be able to track at least one user at any time\\
+    \tctype & Functional (dynamic, manual)\\
+    \testers & Software developers\\
+    \tcpass & The camera gives the accurate count of moving objects in the screen (at least one when there is someone working out).\\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 4.2.5:}{Operating System support} \\
+    \tcdesc & The mobile application can be accessible on both Android and IOS \\
+    \tctype & Functional (dynamic, manual)\\
+    \testers & Software developers\\
+    \tcpass & The application is usable and passes on each platform.\\
+\end{testcase}
+\endgroup
+
+\newpage
+\subsubsection{User Experience Testing}
+The following non-functional requirements will be tested via a user experience survey administered to a testing group. 
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 4.2.1.1:}{Camera is non-obtrusive} \\
+    \tcdesc & The camera blends in with the environment and does not negatively affect the aesthetic of the gym. \\
+    \tctype & Functional (dynamic, manual)\\
+    \testers & Testing group\\
+    \tcpass & The camera is approved by the users confirming it does not negatively impact the aesthetic of the gym.\\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 4.2.1.2:}{Personalization and Internalization} \\
+    \tcdesc & The product shall become the user’s preferred tracking method after the trial period.  \\
+    \tctype & Functional (dynamic, manual)\\
+    \testers & Testing group\\
+    \tcpass & After a trial period of one week, the user should agree that they would rather se this product than manually track their muscle training progress.\\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 4.2.1.2:}{Personalization and Internalization} \\
+    \tcdesc & The product shall become the user’s preferred tracking method after the trial period.  \\
+    \tctype & Functional (dynamic, manual)\\
+    \testers & Testing group\\
+    \tcpass & After a trial period of one week, the user should agree that they would rather se this product than manually track their muscle training progress.\\
+\end{testcase}
+\endgroup
+
+\begingroup
+\begin{testcase}
+    \tctit{Test 4.2.1.3:}{Learning Period} \\
+    \tcdesc & The product should be easy to learn by users who have never tracked their workout before.  \\
+    \tctype & Functional (dynamic, manual)\\
+    \testers & Testing group\\
+    \tcpass & fter a trial period of one week, the rate of errors that the users make while using the application should decrease to at most 5\%. \\
+\end{testcase}
+\endgroup
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TIMELINE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Timeline}
+The timeline below is structured roughly to match the anticipated chronology of testing. Note: Dates are anticipated to change. 
+
+\begingroup
+\begin{center}
+\begin{tabular}{p{5cm} p{2cm} p{3cm} p{3cm}}
+    \hline
+    \textbf{Task} & \textbf{Responsible Party} & \textbf{Test Creation Date} & \textbf{Test Completion Date}\\
+    \hline
+    Completion of Proof of Concept demo & Development team & 15/11/2016 & 20/11/2016 \\
+
+    Mobile application output data  test cases & Birunthaa & 01/12/2016 & 05/12/2016 \\
+
+    QR code identification test cases & Micaela & 05/01/2017 & 12/01/2017 \\
+
+    Image recognition test cases & Simar & 09/01/2017 & 16/01/2017 \\
+    
+    Sets and repetitions test cases & Simar	& 18/01/2017 & 27/01/2017 \\
+
+    Database retrieval and manipulation test cases & Micaela & 01/02/2017 & 10/02/2017\\
+
+    Mobile application data from the server  test cases & Simar & 13/02/2017 & 20/02/2017\\
+ 
+    User experience survey phase I test cases & Birunthaa & 22/02/2017 & 06/03/2017 \\
+
+    User experience survey phase II test cases & Micaela & 15/03/2017 & 27/03/2017 \\
+    \hline
+\end{tabular}
+\end{center}
+\captionof{table}{Timeline of testing}
+\endgroup
+
+
+\end{document}
+

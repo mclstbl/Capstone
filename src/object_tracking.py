@@ -32,23 +32,14 @@ def setCamera():
 
     return camera
 
-# Define the lower and upper boundaries of the "green"
-# ball in the HSV color space, then initialize the
-# list of tracked points
-        
-
-slopes = deque(maxlen=4)
-downs = 0
-ups = 0
-reps = 0
-
-
+# Returns the slope between 2 (x,y) positions a and b
 def slope(a, b):
     if(b[0] != a[0]):
         return (b[1] - a[1])/(b[0] - a[0])
     return None
-    
 
+# Detects direction of object movement based on slopes between
+# consecutive points, and also displacement along y-axis
 def detectDirection(prev, cur):
     slopes.appendleft(slope(prev, cur))
 
@@ -66,31 +57,44 @@ def detectDirection(prev, cur):
     global downs
     global reps
 
+# Increase ups if y-value is decreasing and the arch is pointing up
     if ((cur[1] - prev[1] < 0) and goingUpArch):
-        print("up "+str(ups))
-        ups+=1
+        print("up " + str(ups))
+        ups += 1
+# Increase downs if y-value is increasing and the arch is pointing down
     elif ((cur[1] - prev[1] > 0) and not goingUpArch):
-        print("down "+str(downs))
-        downs+=1
+        print("down " + str(downs))
+        downs += 1
+# Reset ups and downs counters otherwise to signify that tracking
+# a one-way motion (half of a rep) has ended
     else:
         print("-")
-        ups=0
-        downs=0
+        ups = 0
+        downs = 0
+# minpts is an estimate of the minimum count of ups/downs in each rep
+# Actual count in a rep is plus/minus slack points
+    minpts = 20
+    slack = 5
+# Increment reps if movement has enough ups and downs and reset counters
+# This filters out movements that are too small or too big from being
+# interpreted as a rep
+    if ups >= minpts and downs>=minpts and (abs(ups - int(downs)) <= slack):
+        reps += 1
+        print("rep: " + str(reps));
+        ups = 0
+        downs = 0
 
-    if ups >= 20 and downs>=20 and (abs(ups - int(downs)) <= 5):
-        reps+=1
-        print("rep: "+str(reps));
-        ups=0
-        downs=0
-
+# Define the lower and upper boundaries of the "green"
+# ball in the HSV color space, then initialize the
+# list of tracked points
 def defineColour():
     greenLower = (55-30, 80-30, 140-30)
     greenUpper = (55+30, 80+30, 140+30)
-    pts = deque(maxlen=args["buffer"])
+    pts = deque(maxlen = args["buffer"])
     return (greenLower, greenUpper, pts)
 
 # Keep looping
-def cameraLoop(greenLower, greenUpper, pts, args):
+def cameraLoop(camera, greenLower, greenUpper, pts, args):
     prev = None
     while True:
         # isArch(pts)
@@ -130,6 +134,9 @@ def cameraLoop(greenLower, greenUpper, pts, args):
             ((x, y), radius) = cv2.minEnclosingCircle(c)
             M = cv2.moments(c)
             center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+
+# Keep track of direction at each point and update the
+# value of previous position
             if(prev is not None):
                 detectDirection(prev, center)
             prev = center
@@ -161,17 +168,22 @@ def cameraLoop(greenLower, greenUpper, pts, args):
 
 # If the 'esc' key is pressed, stop the loop
         if key == 27:
-        	print("here")
         	break
 
 # Cleanup the camera and close any open windows
-def finish():
+def finish(camera):
     camera.release()
     cv2.destroyAllWindows()
 
-# MAIN FUNCTION
+# Initialize counter variables
+slopes = deque(maxlen=4)
+downs = 0
+ups = 0
+reps = 0
+
+# Main function
 args = init()
 camera = setCamera()
 (greenLower, greenUpper, pts) = defineColour()
-cameraLoop(greenLower, greenUpper, pts, args)
-finish()
+cameraLoop(camera, greenLower, greenUpper, pts, args)
+finish(camera)

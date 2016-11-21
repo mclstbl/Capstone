@@ -32,6 +32,11 @@ def setCamera():
 
     return camera
 
+def updateCounts(r):
+    r += 1
+# TODO: call text display update from here so it changes
+# each time rep count changes
+
 # Returns the slope between 2 (x,y) positions a and b
 def slope(a, b):
     if(b[0] != a[0]):
@@ -79,7 +84,7 @@ def detectDirection(prev, cur):
 # This filters out movements that are too small or too big from being
 # interpreted as a rep
     if ups >= minpts and downs>=minpts and (abs(ups - int(downs)) <= slack):
-        reps += 1
+        updateCounts(reps)
         print("rep: " + str(reps));
         ups = 0
         downs = 0

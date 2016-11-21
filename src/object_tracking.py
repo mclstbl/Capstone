@@ -41,8 +41,15 @@ def defineColour():
     pts = deque(maxlen=args["buffer"])
     return (greenLower, greenUpper, pts)
 
+def detectYDirection(prev, cur):
+    if (cur - prev > 0):
+        print("down")
+    else:
+        print("up")
+
 # Keep looping
 def cameraLoop(greenLower, greenUpper, pts, args):
+    cur = -1
     while True:
 
 # Grab the current frame
@@ -81,6 +88,8 @@ def cameraLoop(greenLower, greenUpper, pts, args):
             ((x, y), radius) = cv2.minEnclosingCircle(c)
             M = cv2.moments(c)
             center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+            detectYDirection(cur, center[1])
+            cur = center[1]
 
 # Only proceed if the radius meets a minimum size
             if radius > 10:
@@ -107,7 +116,7 @@ def cameraLoop(greenLower, greenUpper, pts, args):
         cv2.imshow("Frame", frame)
         key = cv2.waitKey(33)
 
-# If the 'q' key is pressed, stop the loop
+# If the 'esc' key is pressed, stop the loop
         if key == 27:
         	print("here")
         	break

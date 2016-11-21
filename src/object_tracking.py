@@ -17,6 +17,7 @@ def init():
     ap.add_argument("-b", "--buffer", type=int, default=64,
         help="max buffer size")
     args = vars(ap.parse_args())
+
     return args
  
 # If a video path was not supplied, grab the reference
@@ -43,6 +44,7 @@ def defineColour():
 # Keep looping
 def cameraLoop(greenLower, greenUpper, pts, args):
     while True:
+
 # Grab the current frame
         (grabbed, frame) = camera.read()
 
@@ -55,7 +57,9 @@ def cameraLoop(greenLower, greenUpper, pts, args):
         frame = imutils.resize(frame, width=600)
         # blurred = cv2.GaussianBlur(frame, (11, 11), 0)
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-
+# Display counter on the screen
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        cv2.putText(frame,'Counter: 10',(400,50), font, 1,(255,255,255),1)
 # Construct a mask for the color "green", then perform
 # a series of dilations and erosions to remove any small
 # blobs left in the mask
@@ -101,11 +105,12 @@ def cameraLoop(greenLower, greenUpper, pts, args):
 
 # Show the frame to our screen
         cv2.imshow("Frame", frame)
-        key = cv2.waitKey(1) & 0xFF
+        key = cv2.waitKey(33)
 
 # If the 'q' key is pressed, stop the loop
-        if key == ord("q"):
-            break
+        if key == 27:
+        	print("here")
+        	break
 
 # Cleanup the camera and close any open windows
 def finish():

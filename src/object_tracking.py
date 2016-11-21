@@ -34,15 +34,22 @@ def setCamera():
 # Define the lower and upper boundaries of the "green"
 # ball in the HSV color space, then initialize the
 # list of tracked points
-def defineColour():
-    greenLower = (29, 86, 6)
-    greenUpper = (64, 255, 255)
-    pts = deque(maxlen=args["buffer"])
-    return (greenLower, greenUpper, pts)
+
+# def isArch(points):
+#     print "*********************"
+#     for i in xrange(1, len(pts)):
+#         a = pts[i]
+#         b = pts[i - 1]
+#         if a is None or b is None:
+#             continue
+#         else: 
+#             print slope(a, b)
+
 
 # Keep looping
 def cameraLoop(greenLower, greenUpper, pts, args):
     while True:
+        # isArch(pts)
 # Grab the current frame
         (grabbed, frame) = camera.read()
 

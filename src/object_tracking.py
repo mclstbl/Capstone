@@ -35,27 +35,63 @@ def setCamera():
 # Define the lower and upper boundaries of the "green"
 # ball in the HSV color space, then initialize the
 # list of tracked points
+        
 
-# def isArch(points):
-#     print "*********************"
-#     for i in xrange(1, len(pts)):
-#         a = pts[i]
-#         b = pts[i - 1]
-#         if a is None or b is None:
-#             continue
-#         else: 
-#             print slope(a, b)
+slopes = deque(maxlen=4)
+downs = 0
+ups = 0
+reps = 0
 
 
-def detectYDirection(prev, cur):
-    if (cur - prev > 0):
-        print("down")
+def slope(a, b):
+    if(b[0] != a[0]):
+        return (b[1] - a[1])/(b[0] - a[0])
+    return None
+    
+
+def detectDirection(prev, cur):
+    slopes.appendleft(slope(prev, cur))
+
+    # print slopes
+    goingUpArch = False
+    for i in xrange(1, len(slopes)):
+        if pts[i - 1] is None or pts[i] is None:
+            continue
+        if pts[i - 1] > pts[i]:
+            goingUpArch = True
+            break
+    # print goingUpArch
+
+    global ups
+    global downs
+    global reps
+
+    if ((cur[1] - prev[1] < 0) and goingUpArch):
+        print("up "+str(ups))
+        ups+=1
+    elif ((cur[1] - prev[1] > 0) and not goingUpArch):
+        print("down "+str(downs))
+        downs+=1
     else:
-        print("up")
+        print("-")
+        ups=0
+        downs=0
+
+    if ups >= 20 and downs>=20 and (abs(ups - int(downs)) <= 5):
+        reps+=1
+        print("rep: "+str(reps));
+        ups=0
+        downs=0
+
+def defineColour():
+    greenLower = (55-30, 80-30, 140-30)
+    greenUpper = (55+30, 80+30, 140+30)
+    pts = deque(maxlen=args["buffer"])
+    return (greenLower, greenUpper, pts)
 
 # Keep looping
 def cameraLoop(greenLower, greenUpper, pts, args):
-    cur = -1
+    prev = None
     while True:
         # isArch(pts)
 # Grab the current frame
@@ -94,8 +130,9 @@ def cameraLoop(greenLower, greenUpper, pts, args):
             ((x, y), radius) = cv2.minEnclosingCircle(c)
             M = cv2.moments(c)
             center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-            detectYDirection(cur, center[1])
-            cur = center[1]
+            if(prev is not None):
+                detectDirection(prev, center)
+            prev = center
 
 # Only proceed if the radius meets a minimum size
             if radius > 10:

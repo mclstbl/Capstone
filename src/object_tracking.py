@@ -88,8 +88,13 @@ def detectDirection(prev, cur):
 # ball in the HSV color space, then initialize the
 # list of tracked points
 def defineColour():
-    greenLower = (55-30, 80-30, 140-30)
-    greenUpper = (55+30, 80+30, 140+30)
+    # hsv = [55, 80, 140] #green ball
+    # hsv = [166, 147, 174] #pink
+    hsv = [55, 130, 175] #greenscreen green
+    offset1 = 30
+    offset2 = 50
+    greenLower = (hsv[0]-offset1, hsv[1]-offset1, hsv[2]-offset2)
+    greenUpper = (hsv[0]+offset1, hsv[1]+offset1, hsv[2]+offset2)
     pts = deque(maxlen = args["buffer"])
     return (greenLower, greenUpper, pts)
 

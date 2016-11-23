@@ -32,57 +32,74 @@ def setCamera():
 
     return camera
 
+amountOfCollectedSlopes = 7
+
+def isNegativeArch(points):
+    validMax = 4
+    ret = True
+    if len(points) >= amountOfCollectedSlopes:
+        for i in xrange(1, len(points)):
+            if points[i - 1] is None or points[i] is None:
+                return False
+            if abs(points[i - 1]) > validMax or abs(points[i]) > validMax:
+                return False
+            ret = ret and (points[i - 1] <= points[i])
+            if not ret:
+                # print i
+                return False
+    else:
+        return False
+    return ret
+        
+def isPositiveArch(points):
+    validMax = 4
+    ret = True
+    if len(points) >= amountOfCollectedSlopes:
+        for i in xrange(1, len(points)):
+            if points[i - 1] is None or points[i] is None:
+                return False
+            if abs(points[i - 1]) > validMax or abs(points[i]) > validMax:
+                return False
+            ret = ret and (points[i - 1] >= points[i])
+            if not ret:
+                # print i
+                return False
+    else:
+        return False
+    return ret
+        
+
+
 # Returns the slope between 2 (x,y) positions a and b
 def slope(a, b):
     if(b[0] != a[0]):
-        return (b[1] - a[1])/(b[0] - a[0])
+        return (b[1] - a[1])/float(b[0] - a[0])
     return None
 
 # Detects direction of object movement based on slopes between
 # consecutive points, and also displacement along y-axis
 def detectDirection(prev, cur):
-    slopes.appendleft(slope(prev, cur))
-
-    # print slopes
-    goingUpArch = False
-    for i in xrange(1, len(slopes)):
-        if pts[i - 1] is None or pts[i] is None:
-            continue
-        if pts[i - 1] > pts[i]:
-            goingUpArch = True
-            break
-    # print goingUpArch
-
-    global ups
-    global downs
+    global up
+    global down
     global reps
 
-# Increase ups if y-value is decreasing and the arch is pointing up
-    if ((cur[1] - prev[1] < 0) and goingUpArch):
-        print("up " + str(ups))
-        ups += 1
-# Increase downs if y-value is increasing and the arch is pointing down
-    elif ((cur[1] - prev[1] > 0) and not goingUpArch):
-        print("down " + str(downs))
-        downs += 1
-# Reset ups and downs counters otherwise to signify that tracking
-# a one-way motion (half of a rep) has ended
-    else:
-        print("-")
-        ups = 0
-        downs = 0
-# minpts is an estimate of the minimum count of ups/downs in each rep
-# Actual count in a rep is plus/minus slack points
-    minpts = 20
-    slack = 5
-# Increment reps if movement has enough ups and downs and reset counters
-# This filters out movements that are too small or too big from being
-# interpreted as a rep
-    if ups >= minpts and downs>=minpts and (abs(ups - int(downs)) <= slack):
-        reps += 1
-        print("rep: " + str(reps));
-        ups = 0
-        downs = 0
+    slopeVal = slope(prev, cur)
+    # print slopeVal
+    slopes.appendleft(slopeVal)
+    # print slopes
+    if (isNegativeArch(slopes, )):
+        print "Down"
+        down = True
+        slopes.clear()
+    elif (isPositiveArch(slopes)):
+        print "Up"
+        up = True
+        slopes.clear()
+    
+    if up and down:
+        reps+=1
+        up = False
+        down = False
 
 # Define the lower and upper boundaries of the "green"
 # ball in the HSV color space, then initialize the
@@ -92,7 +109,7 @@ def defineColour():
     # hsv = [166, 147, 174] #pink
     hsv = [55, 130, 175] #greenscreen green
     offset1 = 30
-    offset2 = 50
+    offset2 = 100
     greenLower = (hsv[0]-offset1, hsv[1]-offset1, hsv[2]-offset2)
     greenUpper = (hsv[0]+offset1, hsv[1]+offset1, hsv[2]+offset2)
     pts = deque(maxlen = args["buffer"])
@@ -181,10 +198,10 @@ def finish(camera):
     cv2.destroyAllWindows()
 
 # Initialize counter variables
-slopes = deque(maxlen=4)
-downs = 0
-ups = 0
+slopes = deque(maxlen=amountOfCollectedSlopes)
 reps = 0
+up = False
+down = False
 
 # Main function
 args = init()

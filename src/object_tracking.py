@@ -32,11 +32,6 @@ def setCamera():
 
     return camera
 
-def updateCounts(r):
-    r += 1
-# TODO: call text display update from here so it changes
-# each time rep count changes
-
 # Returns the slope between 2 (x,y) positions a and b
 def slope(a, b):
     if(b[0] != a[0]):
@@ -84,7 +79,7 @@ def detectDirection(prev, cur):
 # This filters out movements that are too small or too big from being
 # interpreted as a rep
     if ups >= minpts and downs>=minpts and (abs(ups - int(downs)) <= slack):
-        updateCounts(reps)
+        reps += 1
         print("rep: " + str(reps));
         ups = 0
         downs = 0
@@ -117,7 +112,7 @@ def cameraLoop(camera, greenLower, greenUpper, pts, args):
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 # Display counter on the screen
         font = cv2.FONT_HERSHEY_SIMPLEX
-        cv2.putText(frame,'Counter: 10',(400,50), font, 1,(255,255,255),1)
+        cv2.putText(frame,'Counter: ' + str(reps), (400, 50), font, 1, (255, 255, 255), 1)
 # Construct a mask for the color "green", then perform
 # a series of dilations and erosions to remove any small
 # blobs left in the mask

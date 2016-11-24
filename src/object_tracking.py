@@ -4,6 +4,7 @@ import numpy as np
 import argparse
 import imutils
 import cv2
+import time
 
 # These are required on some Macs so cv2 can be imported
 # import sys
@@ -31,6 +32,20 @@ def setCamera():
         camera = cv2.VideoCapture(args["video"])
 
     return camera
+
+# Define the lower and upper boundaries of the "green"
+# ball in the HSV color space, then initialize the
+# list of tracked points
+def defineColour():
+    # hsv = [55, 80, 140] #green ball
+    # hsv = [166, 147, 174] #pink
+    hsv = [55, 130, 175] #greenscreen green
+    offset1 = 30
+    offset2 = 100
+    greenLower = (hsv[0]-offset1, hsv[1]-offset1, hsv[2]-offset2)
+    greenUpper = (hsv[0]+offset1, hsv[1]+offset1, hsv[2]+offset2)
+    pts = deque(maxlen = args["buffer"])
+    return (greenLower, greenUpper, pts)
 
 def isNegativeArch(points):
     validMax = 4
@@ -74,7 +89,7 @@ def slope(a, b):
 
 # Detects direction of object movement based on slopes between
 # consecutive points, and also displacement along y-axis
-def detectDirection(prev, cur, up, down, reps):
+def detectDirection(prev, cur, up, down, reps, stop0):
     slopeVal = slope(prev, cur)
     # print slopeVal
     slopes.appendleft(slopeVal)
@@ -92,26 +107,48 @@ def detectDirection(prev, cur, up, down, reps):
         reps += 1
         up = False
         down = False
+        stop0 = -1
 
-    return(up, down, reps)
+    return(up, down, reps, stop0)
 
-# Define the lower and upper boundaries of the "green"
-# ball in the HSV color space, then initialize the
-# list of tracked points
-def defineColour():
-    # hsv = [55, 80, 140] #green ball
-    # hsv = [166, 147, 174] #pink
-    hsv = [55, 130, 175] #greenscreen green
-    offset1 = 30
-    offset2 = 100
-    greenLower = (hsv[0]-offset1, hsv[1]-offset1, hsv[2]-offset2)
-    greenUpper = (hsv[0]+offset1, hsv[1]+offset1, hsv[2]+offset2)
-    pts = deque(maxlen = args["buffer"])
-    return (greenLower, greenUpper, pts)
+# Detect end of a set if object stays in roughly the same position
+# for more than 10 seconds
+# stop0 is the time when the object first stopped
+# t0 is the current time
+def detectEndOfSet(stop0, t0, sets, reps):
+    if ((t0 - stop0) >= 10 and reps > 0):
+        print ("reset reps")
+        sets += 1
+        print ("incremented sets to " + str(sets))
+        stop0 = -1
+        reps = 0
+    return (stop0, sets, reps)
+
+# Get average of at most the last n tracked pts not equal to None
+# Used for checking if the marker moved over the last few pts
+def ptsAverage(n, pts):
+    nsum0 = 0
+    nsum1 = 0
+    ctr = 0
+# If pts has less non-None entries, just get the average of
+# entries
+    for p in pts:
+        ctr += 1
+        if (p is None):
+            continue
+        else:
+            nsum0 += p[0]
+            nsum1 += p[1]
+        if (ctr == n):
+            break
+    return (nsum0 / ctr, nsum1 / ctr)
 
 # Keep looping
 def cameraLoop(camera, greenLower, greenUpper, pts, args, up, down, reps):
     prev = None
+    stop0 = -1
+    sets = 0
+
     while True:
         # isArch(pts)
 # Grab the current frame
@@ -128,7 +165,7 @@ def cameraLoop(camera, greenLower, greenUpper, pts, args, up, down, reps):
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 # Display counter on the screen
         font = cv2.FONT_HERSHEY_SIMPLEX
-        cv2.putText(frame,'Counter: ' + str(reps), (400, 50), font, 1, (255, 255, 255), 1)
+        cv2.putText(frame,'Sets: ' + str(sets) + '    Reps: ' + str(reps), (50, 50), font, 1, (255, 255, 255), 1)
 # Construct a mask for the color "green", then perform
 # a series of dilations and erosions to remove any small
 # blobs left in the mask
@@ -154,7 +191,24 @@ def cameraLoop(camera, greenLower, greenUpper, pts, args, up, down, reps):
 # Keep track of direction at each point and update the
 # value of previous position
             if(prev is not None):
-                (up, down, reps) = detectDirection(prev, center, up, down, reps)
+                (up, down, reps, stop0) = detectDirection(prev, center, up, down, reps, stop0)
+# Check if marker has stopped moving or is staying in the same area
+                stopOffset = 10
+# Average of last n pts or previous center
+                avg = ptsAverage(3, pts)
+# If all pts entries are None, use prev value as avg
+                if (avg == (0,0)):
+                    avg = prev
+                # print ("stop0 " + str(stop0) + " avg " + str(avg) + " center " + str(center))
+# If object does stays around an specific area over a few iterations
+# and no stops have been previously found, record current stop time
+                if (abs(center[0] - avg[0]) <= stopOffset
+                    and abs(center[1] - avg[1]) <= stopOffset
+                    and stop0 == -1):
+                    stop0 = time.time()
+# If there is an existing stop time, check for end of set
+                elif (stop0 > -1):
+                    (stop0, sets, reps) = detectEndOfSet(stop0, time.time(), sets, reps)
             prev = center
 
 # Only proceed if the radius meets a minimum size
@@ -163,6 +217,10 @@ def cameraLoop(camera, greenLower, greenUpper, pts, args, up, down, reps):
                 cv2.circle(frame, (int(x), int(y)), int(radius),
                     (0, 255, 255), 2)
                 cv2.circle(frame, center, 5, (0, 0, 255), -1)
+# If a break is detected and marker moves out of view
+# check for end of a set
+        elif (stop0 > -1):
+            (stop0, sets, reps) = detectEndOfSet(stop0, time.time(), sets, reps)
 
 # Update the points queue
         pts.appendleft(center)
@@ -180,7 +238,7 @@ def cameraLoop(camera, greenLower, greenUpper, pts, args, up, down, reps):
 
 # Show the frame to our screen
         cv2.imshow("Frame", frame)
-        key = cv2.waitKey(33)
+        key = cv2.waitKey(55)
 
 # If the 'esc' key is pressed, stop the loop
         if key == 27:
@@ -199,8 +257,9 @@ up = False
 down = False
 
 # Main function
-args = init()
-camera = setCamera()
-(greenLower, greenUpper, pts) = defineColour()
-cameraLoop(camera, greenLower, greenUpper, pts, args, up, down, reps)
-finish(camera)
+if __name__ == "__main__":
+    args = init()
+    camera = setCamera()
+    (greenLower, greenUpper, pts) = defineColour()
+    cameraLoop(camera, greenLower, greenUpper, pts, args, up, down, reps)
+    finish(camera)

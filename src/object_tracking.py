@@ -32,8 +32,6 @@ def setCamera():
 
     return camera
 
-amountOfCollectedSlopes = 7
-
 def isNegativeArch(points):
     validMax = 4
     ret = True
@@ -68,8 +66,6 @@ def isPositiveArch(points):
         return False
     return ret
         
-
-
 # Returns the slope between 2 (x,y) positions a and b
 def slope(a, b):
     if(b[0] != a[0]):
@@ -78,11 +74,7 @@ def slope(a, b):
 
 # Detects direction of object movement based on slopes between
 # consecutive points, and also displacement along y-axis
-def detectDirection(prev, cur):
-    global up
-    global down
-    global reps
-
+def detectDirection(prev, cur, up, down, reps):
     slopeVal = slope(prev, cur)
     # print slopeVal
     slopes.appendleft(slopeVal)
@@ -97,9 +89,11 @@ def detectDirection(prev, cur):
         slopes.clear()
     
     if up and down:
-        reps+=1
+        reps += 1
         up = False
         down = False
+
+    return(up, down, reps)
 
 # Define the lower and upper boundaries of the "green"
 # ball in the HSV color space, then initialize the
@@ -116,7 +110,7 @@ def defineColour():
     return (greenLower, greenUpper, pts)
 
 # Keep looping
-def cameraLoop(camera, greenLower, greenUpper, pts, args):
+def cameraLoop(camera, greenLower, greenUpper, pts, args, up, down, reps):
     prev = None
     while True:
         # isArch(pts)
@@ -160,7 +154,7 @@ def cameraLoop(camera, greenLower, greenUpper, pts, args):
 # Keep track of direction at each point and update the
 # value of previous position
             if(prev is not None):
-                detectDirection(prev, center)
+                (up, down, reps) = detectDirection(prev, center, up, down, reps)
             prev = center
 
 # Only proceed if the radius meets a minimum size
@@ -198,7 +192,8 @@ def finish(camera):
     cv2.destroyAllWindows()
 
 # Initialize counter variables
-slopes = deque(maxlen=amountOfCollectedSlopes)
+amountOfCollectedSlopes = 7
+slopes = deque(maxlen = amountOfCollectedSlopes)
 reps = 0
 up = False
 down = False
@@ -207,5 +202,5 @@ down = False
 args = init()
 camera = setCamera()
 (greenLower, greenUpper, pts) = defineColour()
-cameraLoop(camera, greenLower, greenUpper, pts, args)
+cameraLoop(camera, greenLower, greenUpper, pts, args, up, down, reps)
 finish(camera)

@@ -111,8 +111,7 @@ def detectDirection(prev, cur, up, down, reps, stop0):
 
     return(up, down, reps, stop0)
 
-# Detect end of a set if object stays in roughly the same position
-# for more than 10 seconds
+# Detect end of a set if object stays in roughly the same position for more than 10 seconds
 # stop0 is the time when the object first stopped
 # t0 is the current time
 def detectEndOfSet(stop0, t0, sets, reps):
@@ -129,11 +128,9 @@ def detectEndOfSet(stop0, t0, sets, reps):
 def ptsAverage(n, pts):
     nsum0 = 0
     nsum1 = 0
-    ctr = 0
-# If pts has less non-None entries, just get the average of
-# entries
+    ctr = 1
+# If pts has less than n non-None entries, get the average of all entries
     for p in pts:
-        ctr += 1
         if (p is None):
             continue
         else:
@@ -141,6 +138,7 @@ def ptsAverage(n, pts):
             nsum1 += p[1]
         if (ctr == n):
             break
+        ctr += 1
     return (nsum0 / ctr, nsum1 / ctr)
 
 # Keep looping

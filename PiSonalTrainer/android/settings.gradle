@@ -1,0 +1,3 @@
+rootProject.name = 'PiSonalTrainer'
+
+include ':app'

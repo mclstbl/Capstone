@@ -25,7 +25,7 @@ def init():
 # to the webcam
 def setCamera():
     if not args.get("video", False):
-        camera = cv2.VideoCapture(0)
+        camera = cv2.VideoCapture(1)
 
 # Otherwise, grab a reference to the video file
     else:
@@ -115,7 +115,7 @@ def detectDirection(prev, cur, up, down, reps, stop0):
 # stop0 is the time when the object first stopped
 # t0 is the current time
 def detectEndOfSet(stop0, t0, sets, reps):
-    if ((t0 - stop0) >= 10 and reps > 0):
+    if ((t0 - stop0) >= 5 and reps > 0):
         print ("reset reps")
         sets += 1
         print ("incremented sets to " + str(sets))
@@ -158,7 +158,7 @@ def cameraLoop(camera, greenLower, greenUpper, pts, args, up, down, reps):
             break
 
 # Resize the frame, blur it, and convert it to the HSV color space
-        frame = imutils.resize(frame, width=600)
+        frame = imutils.resize(frame, width=1200)
         # blurred = cv2.GaussianBlur(frame, (11, 11), 0)
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 # Display counter on the screen
@@ -248,7 +248,7 @@ def finish(camera):
     cv2.destroyAllWindows()
 
 # Initialize counter variables
-amountOfCollectedSlopes = 7
+amountOfCollectedSlopes = 5
 slopes = deque(maxlen = amountOfCollectedSlopes)
 reps = 0
 up = False

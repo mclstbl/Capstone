@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Image, TouchableOpacity, Dimensions  } from 'react-native';
-import { Container, Content, Header, Button, Icon, Title, H1, H2, H3, Text} from 'native-base';
+import { Container, Content, Header, Button, Icon, Title, H1, H2, H3, Text, List, ListItem} from 'native-base';
 import AppTheme from './theme';
 
 import SegmentedControlTab from 'react-native-segmented-control-tab';
@@ -111,6 +111,22 @@ class Progress extends Component {
                         values={['Daily', 'Weekly']}
                         onPress= {index => this.setState({selectedViewModeIndex:index})}
                     />
+                </View>
+                <View>
+                    <List>
+                        <ListItem >
+                            <Text>Day 1</Text>
+                            <Text style={{flex: 1, textAlign: 'right'}}>11.3</Text>
+                        </ListItem>
+                        <ListItem>
+                            <Text>Day 2</Text>
+                            <Text style={{flex: 1, textAlign: 'right'}}>13.5</Text>
+                        </ListItem>
+                        <ListItem>
+                            <Text>Day 3</Text>
+                            <Text style={{flex: 1, textAlign: 'right'}}>14.5</Text>
+                        </ListItem>
+                    </List>
                 </View>
             </Content>
             {this.props.renderFooter()}

@@ -3,8 +3,6 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import { Container, Content, Header, Button, Icon, Title, H1, H2, H3, Text} from 'native-base';
 import AppTheme from './theme';
 
-import Signup from './signup';
-
 class Explorer extends Component {
   constructor(props){
       super(props);

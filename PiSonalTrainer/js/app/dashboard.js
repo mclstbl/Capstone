@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { Footer, FooterTab, Button, Icon } from 'native-base';
 
 import Explorer from './explorer';
+import Progress from './progress';
 
 class Dashboard extends Component {
   constructor(props){
       super(props);
       this.state = {
-          activeTab: 0
+          activeTab: 1
       };
   }
   render() {
@@ -15,7 +16,7 @@ class Dashboard extends Component {
         case 0:
             return (<Explorer renderFooter={()=>this.renderFooter()}/>);
         case 1:
-            return (<Explorer renderFooter={()=>this.renderFooter()}/>);
+            return (<Progress renderFooter={()=>this.renderFooter()}/>);
         case 2:
             return (<Explorer renderFooter={()=>this.renderFooter()}/>);
         case 3:

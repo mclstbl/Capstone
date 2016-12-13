@@ -36,7 +36,10 @@ class Login extends Component {
                     <Icon name='lock' style={{color:'#384850'}}/>
                     <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Password' secureTextEntry/>
                 </InputGroup>
-                <Button primary block iconRight style={{marginBottom: 20}}>
+                <Button primary block iconRight style={{marginBottom: 20}}
+                        onPress={()=>{
+                            this.props.onLogin();
+                        }}>
                     Login
                     <Icon name='caret-right' />
                 </Button>

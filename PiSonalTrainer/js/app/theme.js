@@ -98,7 +98,7 @@ export default {
         return this.fontSizeBase* 1.6;
     },
     get fontSizeH3 () {
-        return this.fontSizeBase* 1.4;
+        return this.fontSizeBase* 1.2;
     },
 
 
@@ -109,8 +109,8 @@ export default {
 
     //FooterTab
     tabBarTextColor: (Platform.OS === 'ios' ) ? '#6b6b6b' : '#b3c7f9',
-    tabBarActiveTextColor: (Platform.OS === 'ios' ) ? '#007aff' : '#fff',
-    tabActiveBgColor: (Platform.OS=='ios') ? '#cde1f9' : undefined,
+    tabBarActiveTextColor: (Platform.OS === 'ios' ) ? '#1D41D5' : '#fff',
+    tabActiveBgColor: (Platform.OS=='ios') ? 'transparent' : undefined,
 
     //Tab
     tabDefaultBg: (Platform.OS === 'ios' ) ? '#F8F8F8' : '#4179F7',

@@ -10,7 +10,7 @@ class App extends Component {
   constructor(props){
       super(props);
       this.state = {
-          loggedIn: false
+          loggedIn: true
       };
   }
   render() {
@@ -30,7 +30,11 @@ class App extends Component {
     }
     else{
         return(
-            <Login />
+            <Login onLogin={()=>{
+                this.setState({
+                    loggedIn: true                    
+                });
+            }}/>
         );
     }
   }

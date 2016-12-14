@@ -25,7 +25,11 @@ class App extends Component {
     }
     if(this.state.loggedIn){
         return (
-            <Dashboard />
+            <Dashboard onLogout={()=>{
+                this.setState({
+                    loggedIn: false
+                });
+            }}/>
         );
     }
     else{

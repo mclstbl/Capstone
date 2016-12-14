@@ -10,7 +10,7 @@ class Dashboard extends Component {
   constructor(props){
       super(props);
       this.state = {
-          activeTab: 2
+          activeTab: 0
       };
   }
   render() {
@@ -22,7 +22,7 @@ class Dashboard extends Component {
         case 2:
             return (<Log renderFooter={()=>this.renderFooter()}/>);
         case 3:
-            return (<Settings renderFooter={()=>this.renderFooter()}/>);
+            return (<Settings renderFooter={()=>this.renderFooter()} onLogout={()=>this.props.onLogout()}/>);
         default:
             return (null);
     }

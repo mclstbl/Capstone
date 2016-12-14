@@ -44,7 +44,9 @@ class Settings extends Component {
                             </View>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.8} style={{backgroundColor: '#fff', marginTop: 5}}>
+                    <TouchableOpacity activeOpacity={0.8} style={{backgroundColor: '#fff', marginTop: 5}} onPress={()=>{
+                        this.props.onLogout();
+                    }}>
                         <View style={{paddingTop: 20, paddingBottom: 20, paddingLeft: 10, flexDirection: 'row', alignItems: 'center'}}>
                             <View style={{flex: 1, paddingLeft: 10}}>
                                 <H3 style={{color: '#1D41D5', marginTop: -10, paddingLeft: 0, marginBottom: -8}}

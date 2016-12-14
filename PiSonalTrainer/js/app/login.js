@@ -5,11 +5,15 @@ import AppTheme from './theme';
 
 import Signup from './signup';
 
+import {getUser} from './mongodb.js';
+
 class Login extends Component {
   constructor(props){
       super(props);
       this.state = {
-          showSignupForm: false
+          showSignupForm: false,
+          username: '',
+          password: ''
       };
   }
   render() {
@@ -30,15 +34,23 @@ class Login extends Component {
                 <H1 style={{paddingBottom: 20}}>PiSonal Trainer</H1>
                 <InputGroup borderType='rounded' style={{marginBottom: 20}} >
                     <Icon name='user' style={{color:'#384850'}}/>
-                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Username or Email'/>
+                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Username or Email' onChangeText={(text) => {this.setState({username: text})}}/>
                 </InputGroup>
                 <InputGroup borderType='rounded' style={{marginBottom: 20}} >
                     <Icon name='lock' style={{color:'#384850'}}/>
-                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Password' secureTextEntry/>
+                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Password' onChangeText={(text) => {this.setState({password: text})}} secureTextEntry/>
                 </InputGroup>
                 <Button primary block iconRight style={{marginBottom: 20}}
                         onPress={()=>{
-                            this.props.onLogin();
+                            getUser(this.state, (doc)=>{
+                                if(doc){
+                                    alert(JSON.stringify(doc));
+                                    this.props.onLogin();
+                                }
+                                else{
+                                    alert('Incorrect username/email or password');
+                                }
+                            });
                         }}>
                     Login
                     <Icon name='caret-right' />

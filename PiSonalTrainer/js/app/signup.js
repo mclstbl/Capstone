@@ -3,7 +3,18 @@ import { Image } from 'react-native';
 import { Container, Content, Button, Icon, H1, InputGroup, Input} from 'native-base';
 import AppTheme from './theme';
 
+import {insertUser} from './mongodb.js';
+
 class Signup extends Component {
+  constructor(props){
+      super(props);
+      this.state = {
+          name: '',
+          username: '',
+          password: '',
+          email: ''
+      };
+  }
   render() {
     return (
         <Container theme={AppTheme}>
@@ -13,25 +24,36 @@ class Signup extends Component {
                 <H1 style={{paddingBottom: 20}}>PiSonal Trainer</H1>
                 <InputGroup borderType='rounded' style={{marginBottom: 20}} >
                     <Icon name='user' style={{color:'#384850'}}/>
-                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Full Name'/>
+                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Full Name' onChangeText={(text) => {this.setState({name: text})}}/>
                 </InputGroup>
                 <InputGroup borderType='rounded' style={{marginBottom: 20}} >
                     <Icon name='user' style={{color:'#384850'}}/>
-                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Username'/>
+                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Username' onChangeText={(text) => {this.setState({username: text})}}/>
                 </InputGroup>
                 <InputGroup borderType='rounded' style={{marginBottom: 20}} >
                     <Icon name='user' style={{color:'#384850'}}/>
-                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Email'/>
+                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Email' onChangeText={(text) => {this.setState({email: text})}}/>
                 </InputGroup>
                 <InputGroup borderType='rounded' style={{marginBottom: 20}} >
                     <Icon name='lock' style={{color:'#384850'}}/>
-                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Password' secureTextEntry/>
+                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Password' secureTextEntry onChangeText={(text) => {this.setState({password: text})}}/>
                 </InputGroup>
-                <InputGroup borderType='rounded' style={{marginBottom: 20}} >
-                    <Icon name='lock' style={{color:'#384850'}}/>
-                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Confirm Password' secureTextEntry/>
-                </InputGroup>
-                <Button primary block iconRight style={{marginBottom: 20}}>
+                <Button primary block iconRight style={{marginBottom: 20}}
+                    onPress={()=>{
+                        if(this.state.username != ''
+                            && this.state.email != ''
+                            && this.state.name != ''
+                            && this.state.password != '' ){
+                            insertUser(this.state, (doc)=>{
+                                alert('Account created! You may login.');
+                                this.props.onBack();
+                            });
+                        }
+                        else{
+                            alert('All fields required');
+                        }
+                        
+                    }}>
                     Register
                     <Icon name='caret-right' />
                 </Button>

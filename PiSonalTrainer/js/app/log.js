@@ -56,6 +56,7 @@ class Log extends Component {
                                 if(this.state.weight && this.state.reps && this.state.sets){
                                     if(isNormalInteger(this.state.weight) && isNormalInteger(this.state.reps) && isNormalInteger(this.state.sets)){
                                         insertLog({
+                                            userid: this.props.user._id,
                                             muscleGroup: this.state.muscleGroup, 
                                             exerciseType: this.state.exerciseType, 
                                             date: this.state.date, 
@@ -177,7 +178,7 @@ class Log extends Component {
                     </TouchableOpacity>
                 </View>
 
-                <Button block style={{marginTop: 30, marginLeft: 20, marginRight: 20}}> + Add New Workout </Button>
+                <Button block style={{marginTop: 30, marginLeft: 20, marginRight: 20}} onPress={()=>{alert('Feature Coming Soon!');}}> + Add New Workout </Button>
                 
             </Content>
             {this.props.renderFooter()}

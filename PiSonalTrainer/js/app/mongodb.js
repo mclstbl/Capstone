@@ -28,3 +28,11 @@ exports.insertLog = function(data, cb){
     cb(doc);
   });
 }
+
+
+exports.getLog = function(muscleGroup, userid, cb){
+  //{userid: '', muscleGroup: 'Biceps', exerciseType: 'Hammer Curls', date: '', weight: 2, sets: 3, reps: 10}
+  log.find({muscleGroup: muscleGroup, userid: userid}, function (err, docs) {
+    cb(docs);
+  });
+}

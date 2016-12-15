@@ -7,14 +7,29 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 import {StockLine} from 'react-native-pathjs-charts';
 import sampleData from './sampleData';
 
+import {getLog} from './mongodb.js';
+
+const months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+const muscleGroupValues = ['Biceps', 'Shoulders', 'Chest', 'All'];
+
 class Progress extends Component {
   constructor(props){
       super(props);
       this.state = {
           selectedWeeksIndex: 0,
           selectedMusclesIndex: 0,
-          selectedViewModeIndex: 0
+          selectedViewModeIndex: 0,
+          rows: []
       };
+      this.getLog(muscleGroupValues[0]);
+  }
+  getLog(muscleGroup){
+      getLog(muscleGroup, this.props.user._id, (docs) => {
+          this.setState({
+              rows: docs
+          });
+      });
   }
   render() {
     return (
@@ -39,8 +54,11 @@ class Progress extends Component {
                         tabStyle={{ borderColor: '#1D41D5' }}
                         tabTextStyle={{color: '#1D41D5'}}
                         activeTabStyle={{ backgroundColor: '#1D41D5' }}
-                        values={['Bi', 'Tri', 'Chest', 'Back', 'Legs', 'All']}
-                        onPress= {index => this.setState({selectedMusclesIndex:index})}
+                        values={muscleGroupValues}
+                        onTabPress= {(index) => {
+                            this.getLog(muscleGroupValues[index]);
+                            // this.setState({selectedMusclesIndex:index});
+                        }}
                     />
                 </View>
                 <View style={{
@@ -114,18 +132,15 @@ class Progress extends Component {
                 </View>
                 <View>
                     <List>
-                        <ListItem >
-                            <Text>Day 1</Text>
-                            <Text style={{flex: 1, textAlign: 'right'}}>11.3</Text>
-                        </ListItem>
-                        <ListItem>
-                            <Text>Day 2</Text>
-                            <Text style={{flex: 1, textAlign: 'right'}}>13.5</Text>
-                        </ListItem>
-                        <ListItem>
-                            <Text>Day 3</Text>
-                            <Text style={{flex: 1, textAlign: 'right'}}>14.5</Text>
-                        </ListItem>
+                        {(this.state.rows.length == 0) ? <Text style={{textAlign: 'center', padding: 20}}>No Entries Found</Text> : null}
+                        {
+                            this.state.rows.map((row, index) => 
+                            <ListItem >
+                                <Text>{months[row.date.getMonth()]} {row.date.getDate()}, {row.date.getFullYear()}</Text>
+                                <Text style={{flex: 1, textAlign: 'right'}}>{Math.round((row.weight/(row.sets*row.reps)) * 100) / 100} Weight/Reps</Text>
+                            </ListItem>
+                            )
+                        }
                     </List>
                 </View>
             </Content>

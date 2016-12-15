@@ -1,15 +1,95 @@
 import React, { Component } from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
-import { Container, Content, Header, Button, Icon, Title, H1, H2, H3, Text} from 'native-base';
+import { Container, Content, Header, Button, Icon, Title, H1, H2, H3, Text, Input, InputGroup} from 'native-base';
 import AppTheme from './theme';
+
+import {insertLog} from './mongodb.js';
 
 class Log extends Component {
   constructor(props){
       super(props);
       this.state = {
+          showAddLog: false,
       };
   }
   render() {
+    if(this.state.showAddLog){
+        return (
+            <Container theme={AppTheme}>
+                <Header>
+                    <Button transparent onPress={()=>{this.setState({showAddLog: false})}}>
+                        <Icon name='angle-left' />
+                        Back
+                    </Button>
+                    <Title>Add Log</Title>
+                </Header>
+                <Content style={{backgroundColor: '#EFEFF4'}}>
+                    <View style={{padding: 20, justifyContent: 'center', alignItems: 'center'}}>
+                        <H2 style={{color: '#606060'}}>
+                            {this.state.muscleGroup}
+                        </H2>
+                        <H3 style={{color: '#6C6C6C'}}>
+                            {this.state.exerciseType}
+                        </H3>
+                        <H3 style={{color: '#6C6C6C', paddingTop: 20, textAlign: 'center', fontSize: 14}}>
+                            {this.state.date.toString()}
+                        </H3>
+                        <InputGroup borderType='rounded' style={{marginTop: 20}} >
+                            <Icon name='user' style={{color:'#384850'}}/>
+                            <Input autoCorrect={false} style={{textAlign: 'center', marginLeft: -20}} placeholder='Weight (lb)' onChangeText={(text) => {this.setState({weight: text})}}/>
+                        </InputGroup>
+                        <InputGroup borderType='rounded' style={{marginTop: 10}} >
+                            <Icon name='user' style={{color:'#384850'}}/>
+                            <Input autoCorrect={false} style={{textAlign: 'center', marginLeft: -20}} placeholder='Sets (eg. 3)' onChangeText={(text) => {this.setState({sets: text})}}/>
+                        </InputGroup>
+                        <InputGroup borderType='rounded' style={{marginTop: 10}} >
+                            <Icon name='user' style={{color:'#384850'}}/>
+                            <Input autoCorrect={false} style={{textAlign: 'center', marginLeft: -20}} placeholder='Reps (eg. 10)' onChangeText={(text) => {this.setState({reps: text})}}/>
+                        </InputGroup>
+                    </View>
+
+                    <Button block style={{marginTop: 10, marginLeft: 20, marginRight: 20}}
+                            onPress={()=>{
+                                function isNormalInteger(str) {
+                                    return /^\+?(0|[1-9]\d*)$/.test(str);
+                                }
+                                if(this.state.weight && this.state.reps && this.state.sets){
+                                    if(isNormalInteger(this.state.weight) && isNormalInteger(this.state.reps) && isNormalInteger(this.state.sets)){
+                                        insertLog({
+                                            muscleGroup: this.state.muscleGroup, 
+                                            exerciseType: this.state.exerciseType, 
+                                            date: this.state.date, 
+                                            weight: parseInt(this.state.weight), 
+                                            sets: parseInt(this.state.sets),
+                                            reps: parseInt(this.state.reps)
+                                        }, (doc) => {
+                                            this.setState({
+                                                showAddLog: false,
+                                                muscleGroup: null,
+                                                exerciseType: null,
+                                                date: null,
+                                                weight: null,
+                                                sets: null,
+                                                reps: null
+                                            });
+                                            alert('Excerise Logged!');
+                                        });
+                                    }
+                                    else{
+                                        alert('All fields are must be positive numeric value.');
+                                    }
+                                }
+                                else{
+                                    alert('All fields are required.');
+                                }
+                                // {muscleGroup: 'Biceps', exerciseType: 'Hammer Curls', date: '', weight: 2, sets: 3, reps: 10}
+                            }}> Submit </Button>
+                    
+                </Content>
+                {this.props.renderFooter()}
+            </Container>
+        );
+    }
     return (
         <Container theme={AppTheme}>
             <Header>
@@ -25,7 +105,7 @@ class Log extends Component {
                     <H3 style={{color: '#6C6C6C', paddingLeft: 20}}>
                         Biceps
                     </H3>
-                    <TouchableOpacity activeOpacity={0.8} style={{backgroundColor: '#fff', marginTop: 5}}>
+                    <TouchableOpacity activeOpacity={0.8} style={{backgroundColor: '#fff', marginTop: 5}} onPress={()=>{this.addLogFor('Biceps', 'Hammer Curls');}}>
                         <View style={{padding: 10, flexDirection: 'row', alignItems: 'center'}}>
                             <View style={{flex: 1, paddingLeft: 10}}>
                                 <H3 style={{color: '#1D41D5', marginTop: -10, paddingLeft: 0, marginBottom: -8}}
@@ -38,7 +118,7 @@ class Log extends Component {
                             </View>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.8} style={{backgroundColor: '#fff', marginTop: 5}}>
+                    <TouchableOpacity activeOpacity={0.8} style={{backgroundColor: '#fff', marginTop: 5}} onPress={()=>{this.addLogFor('Biceps', 'Barbell Curls ');}}>
                         <View style={{padding: 10, flexDirection: 'row', alignItems: 'center'}}>
                             <View style={{flex: 1, paddingLeft: 10}}>
                                 <H3 style={{color: '#1D41D5', marginTop: -10, paddingLeft: 0, marginBottom: -8}}
@@ -56,7 +136,7 @@ class Log extends Component {
                     <H3 style={{color: '#6C6C6C', paddingLeft: 20}}>
                         Shoulders
                     </H3>
-                    <TouchableOpacity activeOpacity={0.8} style={{backgroundColor: '#fff', marginTop: 5}}>
+                    <TouchableOpacity activeOpacity={0.8} style={{backgroundColor: '#fff', marginTop: 5}} onPress={()=>{this.addLogFor('Shoulders', 'Upright Cable Row');}}>
                         <View style={{padding: 10, flexDirection: 'row', alignItems: 'center'}}>
                             <View style={{flex: 1, paddingLeft: 10}}>
                                 <H3 style={{color: '#1D41D5', marginTop: -10, paddingLeft: 0, marginBottom: -8}}
@@ -69,7 +149,7 @@ class Log extends Component {
                             </View>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.8} style={{backgroundColor: '#fff', marginTop: 5}}>
+                    <TouchableOpacity activeOpacity={0.8} style={{backgroundColor: '#fff', marginTop: 5}} onPress={()=>{this.addLogFor('Shoulders', 'Front Barbell Raise');}}>
                         <View style={{padding: 10, flexDirection: 'row', alignItems: 'center'}}>
                             <View style={{flex: 1, paddingLeft: 10}}>
                                 <H3 style={{color: '#1D41D5', marginTop: -10, paddingLeft: 0, marginBottom: -8}}
@@ -82,7 +162,7 @@ class Log extends Component {
                             </View>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.8} style={{backgroundColor: '#fff', marginTop: 5}}>
+                    <TouchableOpacity activeOpacity={0.8} style={{backgroundColor: '#fff', marginTop: 5}} onPress={()=>{this.addLogFor('Shoulders', 'Cable Front Raise');}}>
                         <View style={{padding: 10, flexDirection: 'row', alignItems: 'center'}}>
                             <View style={{flex: 1, paddingLeft: 10}}>
                                 <H3 style={{color: '#1D41D5', marginTop: -10, paddingLeft: 0, marginBottom: -8}}
@@ -103,6 +183,14 @@ class Log extends Component {
             {this.props.renderFooter()}
         </Container>
     );
+  }
+  addLogFor(muscleGroup, exerciseType){
+      this.setState({
+          muscleGroup,
+          exerciseType,
+          date: new Date(),
+          showAddLog: true
+      })
   }
 }
 

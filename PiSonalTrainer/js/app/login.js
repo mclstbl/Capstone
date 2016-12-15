@@ -34,18 +34,17 @@ class Login extends Component {
                 <H1 style={{paddingBottom: 20}}>PiSonal Trainer</H1>
                 <InputGroup borderType='rounded' style={{marginBottom: 20}} >
                     <Icon name='user' style={{color:'#384850'}}/>
-                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Username or Email' onChangeText={(text) => {this.setState({username: text})}}/>
+                    <Input autoCorrect={false} style={{textAlign: 'center', marginLeft: -20}} placeholder='Username or Email' onChangeText={(text) => {this.setState({username: text})}}/>
                 </InputGroup>
                 <InputGroup borderType='rounded' style={{marginBottom: 20}} >
                     <Icon name='lock' style={{color:'#384850'}}/>
-                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Password' onChangeText={(text) => {this.setState({password: text})}} secureTextEntry/>
+                    <Input autoCorrect={false} style={{textAlign: 'center', marginLeft: -20}} placeholder='Password' onChangeText={(text) => {this.setState({password: text})}} secureTextEntry/>
                 </InputGroup>
                 <Button primary block iconRight style={{marginBottom: 20}}
                         onPress={()=>{
                             getUser(this.state, (doc)=>{
                                 if(doc){
-                                    alert(JSON.stringify(doc));
-                                    this.props.onLogin();
+                                    this.props.onLogin(doc);
                                 }
                                 else{
                                     alert('Incorrect username/email or password');

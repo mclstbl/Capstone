@@ -25,7 +25,7 @@ class App extends Component {
     }
     if(this.state.loggedIn){
         return (
-            <Dashboard onLogout={()=>{
+            <Dashboard user={this.state.loggedInUser} onLogout={()=>{
                 this.setState({
                     loggedIn: false
                 });
@@ -34,9 +34,10 @@ class App extends Component {
     }
     else{
         return(
-            <Login onLogin={()=>{
+            <Login onLogin={(user)=>{
                 this.setState({
-                    loggedIn: true                    
+                    loggedIn: true,
+                    loggedInUser: user                  
                 });
             }}/>
         );

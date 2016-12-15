@@ -22,7 +22,7 @@ class Progress extends Component {
             <Header>
                 <Title>Progress</Title>
             </Header>
-            <Content style={{backgroundColor: '#EFEFF4', padding: 20,}}>
+            <Content style={{backgroundColor: '#EFEFF4', padding: 20, paddingBottom: 40,}}>
                 <View>
                     <SegmentedControlTab 
                         selectedIndex={this.state.selectedWeeksIndex}

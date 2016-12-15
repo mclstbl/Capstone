@@ -16,13 +16,13 @@ class Dashboard extends Component {
   render() {
     switch(this.state.activeTab){
         case 0:
-            return (<Explorer renderFooter={()=>this.renderFooter()}/>);
+            return (<Explorer user={this.props.user} renderFooter={()=>this.renderFooter()}/>);
         case 1:
-            return (<Progress renderFooter={()=>this.renderFooter()}/>);
+            return (<Progress user={this.props.user} renderFooter={()=>this.renderFooter()}/>);
         case 2:
-            return (<Log renderFooter={()=>this.renderFooter()}/>);
+            return (<Log user={this.props.user} renderFooter={()=>this.renderFooter()}/>);
         case 3:
-            return (<Settings renderFooter={()=>this.renderFooter()} onLogout={()=>this.props.onLogout()}/>);
+            return (<Settings user={this.props.user} renderFooter={()=>this.renderFooter()} onLogout={()=>this.props.onLogout()}/>);
         default:
             return (null);
     }

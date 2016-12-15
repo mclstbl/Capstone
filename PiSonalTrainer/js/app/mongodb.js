@@ -21,3 +21,10 @@ exports.insertUser = function(user, cb){
     cb(doc);
   });
 }
+
+exports.insertLog = function(data, cb){
+  //{userid: '', muscleGroup: 'Biceps', exerciseType: 'Hammer Curls', date: '', weight: 2, sets: 3, reps: 10}
+  log.insert(data, function (err, doc) {
+    cb(doc);
+  });
+}

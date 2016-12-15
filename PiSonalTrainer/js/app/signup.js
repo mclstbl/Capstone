@@ -24,19 +24,19 @@ class Signup extends Component {
                 <H1 style={{paddingBottom: 20}}>PiSonal Trainer</H1>
                 <InputGroup borderType='rounded' style={{marginBottom: 20}} >
                     <Icon name='user' style={{color:'#384850'}}/>
-                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Full Name' onChangeText={(text) => {this.setState({name: text})}}/>
+                    <Input autoCorrect={false} style={{textAlign: 'center', marginLeft: -20}} placeholder='Full Name' onChangeText={(text) => {this.setState({name: text})}}/>
                 </InputGroup>
                 <InputGroup borderType='rounded' style={{marginBottom: 20}} >
                     <Icon name='user' style={{color:'#384850'}}/>
-                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Username' onChangeText={(text) => {this.setState({username: text})}}/>
+                    <Input autoCorrect={false} style={{textAlign: 'center', marginLeft: -20}} placeholder='Username' onChangeText={(text) => {this.setState({username: text})}}/>
                 </InputGroup>
                 <InputGroup borderType='rounded' style={{marginBottom: 20}} >
                     <Icon name='user' style={{color:'#384850'}}/>
-                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Email' onChangeText={(text) => {this.setState({email: text})}}/>
+                    <Input autoCorrect={false} style={{textAlign: 'center', marginLeft: -20}} placeholder='Email' onChangeText={(text) => {this.setState({email: text})}}/>
                 </InputGroup>
                 <InputGroup borderType='rounded' style={{marginBottom: 20}} >
                     <Icon name='lock' style={{color:'#384850'}}/>
-                    <Input style={{textAlign: 'center', marginLeft: -20}} placeholder='Password' secureTextEntry onChangeText={(text) => {this.setState({password: text})}}/>
+                    <Input autoCorrect={false} style={{textAlign: 'center', marginLeft: -20}} placeholder='Password' secureTextEntry onChangeText={(text) => {this.setState({password: text})}}/>
                 </InputGroup>
                 <Button primary block iconRight style={{marginBottom: 20}}
                     onPress={()=>{

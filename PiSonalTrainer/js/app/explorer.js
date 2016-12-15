@@ -17,17 +17,17 @@ class Explorer extends Component {
             </Header>
             <Content style={{backgroundColor: '#EFEFF4'}}>
                 <View style={{padding: 20, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
-                    <Image source={require('../../images/mansmiling.png')}
+                    <Image source={require('../../images/defaultuser.png')}
                         style={{width: 80, height: 80}}/>
                     <H2 style={{paddingLeft: 10, color: '#606060'}}>
-                        Jacob Smith
+                        {this.props.user.name}
                     </H2>
                 </View>
                 <View style={{backgroundColor: '#fff', padding: 20}}>
                     <H3 style={{color: '#6C6C6C'}}>
                         Suggested Workouts
                     </H3>
-                    <TouchableOpacity activeOpacity={0.4}>
+                    <TouchableOpacity activeOpacity={0.4} onPress={()=>{alert('Feature Coming Soon!');}}>
                         <View style={{paddingTop: 10, flexDirection: 'row'}}>
                             <View>
                                 <Image source={require('../../images/manlunges.png')}
@@ -45,14 +45,14 @@ class Explorer extends Component {
                             </View>
                         </View>
                     </TouchableOpacity>
-                    <Button block style={{marginTop: 15}}> View more workouts </Button>
+                    <Button block style={{marginTop: 15}} onPress={()=>{alert('Feature Coming Soon!');}}> View more workouts </Button>
                 </View>
 
                 <View style={{backgroundColor: '#fff', padding: 20, marginTop: 20}}>
                     <H3 style={{color: '#6C6C6C'}}>
                         Suggested Diet Plans
                     </H3>
-                    <TouchableOpacity activeOpacity={0.4}>
+                    <TouchableOpacity activeOpacity={0.4} onPress={()=>{alert('Feature Coming Soon!');}}>
                         <View style={{paddingTop: 10, flexDirection: 'row'}}>
                             <View>
                                 <Image source={require('../../images/salad.png')}
@@ -70,7 +70,7 @@ class Explorer extends Component {
                             </View>
                         </View>
                     </TouchableOpacity>
-                    <Button block style={{marginTop: 15}}> View more diet plans </Button>
+                    <Button block style={{marginTop: 15}} onPress={()=>{alert('Feature Coming Soon!');}}> View more diet plans </Button>
                 </View>
                 
             </Content>

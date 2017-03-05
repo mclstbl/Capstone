@@ -25,7 +25,7 @@ def init():
 # to the webcam
 def setCamera():
     if not args.get("video", False):
-        camera = cv2.VideoCapture(1)
+        camera = cv2.VideoCapture(0)
 
 # Otherwise, grab a reference to the video file
     else:

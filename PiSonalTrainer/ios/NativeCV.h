@@ -6,15 +6,9 @@
 //  Copyright © 2017 Facebook. All rights reserved.
 //
 
-#ifndef NativeCV_h
-#define NativeCV_h
-
-
-#endif /* NativeCV_h */
-
+#import "CameraView.h"
 #import <React/RCTBridgeModule.h>
-#import <UIKit/UIKit.h>
+#import <React/RCTViewManager.h>
 
-@interface NativeCV : NSObject <RCTBridgeModule>
-
+@interface NativeCV : RCTViewManager <RCTBridgeModule>
 @end

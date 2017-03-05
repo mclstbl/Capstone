@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
 import { Container, Content, Header, Button, Icon, Title, H1, H2, H3, Text, Input, InputGroup} from 'native-base';
 import AppTheme from './theme';
+import RNOpenCV from './camera';
 
 import {insertLog} from './mongodb.js';
 
@@ -13,6 +14,12 @@ class Log extends Component {
       };
   }
   render() {
+    if(this.state.showCamera) {
+        console.log("Showing camera");
+        return (
+            <RNOpenCV user={this.props.user} renderFooter={()=>this.renderFooter()} />
+        );
+    }
     if(this.state.showAddLog){
         return (
             <Container theme={AppTheme}>
@@ -34,6 +41,13 @@ class Log extends Component {
                         <H3 style={{color: '#6C6C6C', paddingTop: 20, textAlign: 'center', fontSize: 14}}>
                             {this.state.date.toString()}
                         </H3>
+                        <Button block style={{marginTop: 10, marginLeft: 20, marginRight: 20}} onPress={()=>{
+                            this.setState({showCamera: true})
+                            }}
+                        > Use Camera </Button>
+                        <H2 style={{color: '#6C6C6C', paddingTop: 20, textAlign: 'center', fontSize: 14}}>
+                            OR enter stats
+                        </H2>
                         <InputGroup borderType='rounded' style={{marginTop: 20}} >
                             <Icon name='user' style={{color:'#384850'}}/>
                             <Input autoCorrect={false} style={{textAlign: 'center', marginLeft: -20}} placeholder='Weight (lb)' onChangeText={(text) => {this.setState({weight: text})}}/>

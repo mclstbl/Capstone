@@ -1,0 +1,277 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{enumerate}
+
+% Display only levels as deep as subsection in tableofcontents
+\setcounter{tocdepth}{2}
+
+\usepackage{caption}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{array}
+
+\usepackage{multirow,booktabs}
+
+% Define function subcommands
+\newcommand{\name}[1]{\hline \multicolumn{2}{|l|}{\texttt{#1}} }
+\newcommand{\inp}[1]{\hline \textbf{Input:} & #1}
+\newcommand{\out}[1]{\hline \textbf{Output:} & #1}
+\newcommand{\desc}[1]{\hline \textbf{Description:} & #1 }
+
+% Define function command
+\newcommand{\fcn}[4]{
+    \begin{center}
+    \begin{tabular}{|p{2cm} p{10cm}|}
+    \hline
+    \name{#1} \\
+    \inp{#2} \\
+    \out{#3} \\
+    \desc{#4} \\
+    \hline
+    \end{tabular}
+    \end{center}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% GRAPHS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{tikz}
+\usepackage{verbatim}
+\usetikzlibrary{positioning,arrows,shapes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% HEADER
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{PiSonal Trainer: Weight Lifting Performance Tracker}
+\fancyfoot[L]{User's Guide}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Use this to pad tables
+\usepackage{array}
+\setlength\extrarowheight{6pt}
+
+% Define tab command
+\newcommand\tab{\hspace*{2cm}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{
+PiSonal Trainer: Weight Lifting Performance Tracker\\
+\Large {User's Guide}
+}
+\date{March 1, 2017}
+\author{Birunthaa Umamahesan \and Micaela Estabillo \and Simarpreet Singh}
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% COVER PAGE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\thispagestyle{plain}
+\pagenumbering{gobble}
+\maketitle
+\vfill
+\begin{center}
+    Prepared for Computer Science 4ZP6: Capstone Project \\
+    Instructor: Dr. Wenbo He
+    Fall/Winter 2016-2017\\
+\end{center}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TABLE OF CONTENTS AND REVISION HISTORY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tableofcontents
+
+\listoffigures
+
+\listoftables
+
+\thispagestyle{plain}
+\pagenumbering{gobble}
+
+\newpage
+
+\section*{Revision History}
+\begingroup
+\begin{tabular}{ | p{2cm} | p{1.5cm} | p{3.8cm} | p{7cm} |} 
+    \hline
+    \textbf{Date} & \textbf{Version} & \textbf{Primary Author} & \textbf{Comment}\\
+    \hline
+    3/01/2017 & 1.00 & Simarpreet Singh & Add Troubleshooting guide \\
+    \hline
+    2/28/2017 & 1.00 & Micaela Estabillo & Add FAQs and proofread\\
+    \hline
+    2/28/2017 & 1.00 & Birunthaa Umamahesan & Write sections 1-6\\
+    \hline
+\end{tabular}
+    \captionof{table}{Revision history}
+\endgroup
+
+
+\begin{center}
+\end{center}
+
+\newpage
+
+\clearpage
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+PiSonal Trainer is a mobile application designed to monitor a user's fitness goals by recording and reporting their performance on a given exercise. It aims to reduce problems caused by taking training performance notes at the gym by instead using the phone camera to detect the user's movements. Collected repetition and weight data are reported back to application and is synced to a database, which is visible on any device in which the user is signed in. Registered users can create a profile, access their workout logs, view their performance statistics, and manage their meals consumed on a daily basis.
+
+\section{Copyright Information}
+PiSonal Trainer is owned and managed by BMS, a part of McMaster University. Collaborators include Birunthaa Umamahesan, Micaela Estabillo, and Simarpreet Singh. This is an open source project hosted on GitHub and is a fair usage with common development and distribution license (CDDL-1.0).
+
+\section{About this Manual}
+This manual describes how to use the PiSonal Trainer mobile application. The document starts by instructing the user how to register an account and log in to the application. Next, the manual provides an overview of the core functionalities and features, as well as how to setup the camera to begin the user's workout. The user manual ends with instructions for troubleshooting and answers to frequently asked questions. 
+
+\section{Naming Conventions and Terminology}
+\begin{itemize}
+
+    \item \textbf{User}: A user is a registered account holder of PiSonal Trainer. 
+
+    \item \textbf{Weights}: Any equipment that is used in a user's workout, such as dumbbells and barbells.
+
+\end{itemize}
+
+\section{System Requirements}
+PiSonal Trainer is a mobile application that is currently only available to iOS users; the device's iOS version must be 9+. The application's camera-logging functionality can only run on iPhones and iPads that have access to their cameras. Further, PiSonal Trainer requires a fully functional internet connection.
+
+\section{Tasks}
+\subsection{Registration}
+Figure 1 shows a screen capture of the login page.  All users must have a registered account before using PiSonal Trainer. Figure 2 shows a screen capture of the registration page. You can create an account by following these instructions:
+\begin{enumerate}
+\item Click on the “register” button on the bottom of the login page
+\item Enter your full name, username, email, and password into the fields 
+\item Click on the “Register” button 
+\item A confirmation message will appear if you have successfully registered 
+\end{enumerate}
+
+\begin{tabular}{p{7cm} p{7cm}}
+   \includegraphics[scale=0.5]{login} &  \includegraphics[scale=0.5]{register}\\
+   \captionof{figure}{Login page} & \captionof{figure}{Register page} \\
+\end{tabular}
+
+\subsection{Login}
+All users must be logged in to use the PiSonal Trainer application. If you do not have an account please refer to the Registration section to create an account. 
+Figure 1 shows a screen capture of the login page. You can login by following these instructions: 
+\begin{enumerate}
+    \item Enter your username or email and password into the fields 
+    \item Click on the “Login” button 
+\end{enumerate}
+
+\subsection{Explorer}
+The explorer window is where you get news feed related to your fitness interests.  To view the explorer page, click on the far left icon that reads explorer on the navigation bar located on the bottom of the page. This section’s screen capture can be seen in figure 3.
+
+\subsection{Progress}
+The progress page is where you can view your fitness progression for specific workouts over time, which can be adjusted based on different time frames. You can access the progress window by clicking on the progress icon on the navigation bar, found at the bottom on the page. Please refer to figure 4 for the screen capture of this window. 
+
+\begin{tabular}{p{7cm} p{7cm}}
+   \includegraphics[scale=0.5]{explorer} &  \includegraphics[scale=0.5]{progress}\\
+   \captionof{figure}{Explorer page} & \captionof{figure}{Progress page} \\
+\end{tabular}
+
+\subsection{Log}
+The log page is where the user can log their fitness workout and have it stored within the application. You can access the log page by clicking on the log icon on the navigation bar, found at the bottom on the page. The user can log the workout using the camera or manually entering the data. Refer to figure 5 and 6 for the screen capture of this window.
+\subsubsection {Camera} 
+    \begin{enumerate}
+        \item Click on the appropriate workout type by selecting one of the provided options
+        \item  Select the “Use Camera” button to open your devices camera
+        \item  Place the camera facing the you and at a distance where your weight movement can be tracked by the camera
+        \item You can start your workout once a red circle is visible on the screen prompting you that the weight has been detected by the camera
+        \item Click on the “Done” button once you have completed your work out
+    \end{enumerate}
+
+\subsubsection {Manual entry} 
+    \begin{enumerate}
+        \item Click on the appropriate workout type by selecting one of the provided options
+        \item  Enter into your data into the weight, sets, and reps field  
+        \item  Click on the “Submit” button once you have completed your entry  
+    \end{enumerate}
+
+\begin{tabular}{p{5cm} p{5cm} p{5cm}}
+   \includegraphics[scale=0.5]{log1} &  \includegraphics[scale=0.199]{log3} &\includegraphics[scale=0.199]{settings_pg}\\
+   \captionof{figure}{Select workout type} & \captionof{figure}{Enter data using camera or manually}& \captionof{figure}{Settings page} \\
+\end{tabular}
+
+\subsection{Settings}
+The settings page is where you can change your password, report a bug in the application, or log out of the application. Please refer to figure 7 for the screen capture of this window. 
+\subsubsection {Change password} 
+    \begin{enumerate}
+        \item Click on the settings icon on the far right side of the navigation bar, found at the bottom on the page
+        \item  A page with options will be displayed, select "Change Password"
+        \item Enter in new password in the provided field
+        \item Click on the “Save” button once you have complete the process
+    \end{enumerate}
+\subsubsection {Report bug} 
+    \begin{enumerate}
+        \item Click on the settings icon on the far right side of the navigation bar, found at the bottom on the page
+        \item  A page with options will be displayed
+        \item  Select "Report bug" option
+        \item  In the text field, enter your comments on the issue
+        \item  Click on the "Report" button once you have completed your entry
+\end{enumerate}
+\subsubsection {Logout} 
+    \begin{enumerate}
+        \item Click on the settings icon on the far right side of the navigation bar, found at the bottom on the page
+        \item  A page with options will be displayed
+        \item  Select Logout option
+\end{enumerate}
+
+
+
+\section{Troubleshooting}
+\subsection{Overview}
+PiSonal Trainer aims to ensure that users do not encounter bugs while using the app. To prevent bugs in the app, it was tested using Travis after adding each new functionality. This section will go over some common problems or bugs a user might find while using the PiSonal Trainer app.
+
+\subsection{Internet connection}
+PiSonal Trainer requires an internet connection to sync the workouts' repetition counts with the servers. If the app fails to connect to the internet, check your internet connection or connect to a different network.
+
+\subsection{Visual Glitches}
+A user may encounter visual glitches while using the app, this may be due to the incompability of an operating system or the screen resolution. In case of a visual glitch, refer to the System Requirements defined in Section 5 of this manual, and verify that they are satisfied.
+
+\subsection{Data Loading Slow}
+While using the app, it will be making many requests to the server to retrieve data (for example: workout statistics). If the loading is slow, check your internet connection or connect to a different network.
+
+\subsection{Motion Detection}
+PiSonal Trainer detects motion using the camera so if it does not detect the workout movements of the user or if the motion detection is breaking while they are working out, check the following:
+
+\begin{enumerate}
+    \item There needs to be ample lighting for the camera to detect the objects in its view, and to distinguish between colours.
+    \item Make sure that there are no background colours similar to that of the weight that may interfere with motion detection
+    \item If neither 1 nor 2 work, then you are welcome to report this as a bug within the app.
+\end{enumerate}
+
+\section{Frequently Asked Questions}
+\begin{enumerate}
+    \item \textbf{Do I need to make an account to use PiSonal Trainer?} \\
+    Yes. PiSonal Trainer loads and stores fitness tracking data in real-time so it needs to be associated with a user account in order to be accurate. You will need a user name, password and email in order to sign up.
+    
+    \item \textbf{I forgot my password. What do I do?} \\
+    In case you forget your password, click the "Forgot my password" link in the Login page and you will be directed to reset it after receiving a password change email.
+    
+    \item \textbf{How do I change my password?} \\
+    To change your password, log in to the PiSonal Trainer and go to the Settings tab. A password change option is there; it will have a form in which you need to enter your old and new passwords.
+    
+    \item \textbf{Are images and/or videos of me stored anywhere?} \\
+    No. PiSonal Trainer's camera input functionality analyzes your movement in real-time and only takes note of the number of repetitions and sets for each exercise. It does not need to store nor transmit any captured images.
+    
+    \item \textbf{Can I use the app on multiple devices?} \\
+    Yes - as long as you sign in using the same user account on all of them. Since PiSonal Trainer syncs user data in real-time, any device in which a user signs on will show the same data.
+    
+    \item \textbf{Is PiSonal Trainer free?} \\
+    Yes!
+\end{enumerate}
+\end{document}

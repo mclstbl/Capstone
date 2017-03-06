@@ -15,9 +15,8 @@ class Log extends Component {
   }
   render() {
     if(this.state.showCamera) {
-        console.log("Showing camera");
         return (
-            <RNOpenCV user={this.props.user} renderFooter={()=>this.renderFooter()} />
+            <RNOpenCV {...this.props} />
         );
     }
     if(this.state.showAddLog){

@@ -12,6 +12,8 @@ using namespace cv;
 
 @implementation CameraView
 
+RCT_EXPORT_MODULE();
+
 - (instancetype)init
 {
   // Get screen dimensions
@@ -39,12 +41,17 @@ using namespace cv;
     self.videoCamera.defaultAVCaptureSessionPreset = AVCaptureSessionPreset352x288;
     self.videoCamera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait;
     self.videoCamera.defaultFPS = 30;
-  
+    
     RCTLog(@"Starting camera from CameraView");
     [self.videoCamera start];
   }
   
   return self;
+}
+
+- (void) dealloc
+{
+  self.videoCamera = nil;
 }
 
 #pragma mark - Protocol CvVideoCameraDelegate
@@ -56,18 +63,21 @@ Do image processing here! I think processImage gets called by the delegate for e
 - (void)processImage:(Mat&)image;
 {
   // Do some OpenCV stuff with the image
-  Mat image_copy;
-  cvtColor(image, image_copy, COLOR_BGR2GRAY);
   
-  // invert image
-  //bitwise_not(image_copy, image_copy);
+  // VideoFaceDetector
+  NSString *path = [[NSBundle mainBundle] pathForResource:@"haarcascade_frontalface_default.xml" ofType:nil];
+  std::string CASCADE_FILE = std::string([path UTF8String]);
   
-  //Convert BGR to BGRA (three channel to four channel)
-  Mat bgr;
-  cvtColor(image_copy, bgr, COLOR_GRAY2BGR);
+  VideoFaceDetector detector(CASCADE_FILE);
+  cv::Point a = detector.getFrameAndDetect(image);
   
-  cvtColor(bgr, image, COLOR_BGR2BGRA);
+  if (detector.isFaceFound())
+  {
+    cv::rectangle(image, detector.face(), cv::Scalar(255, 0, 0));
+    cv::circle(image, detector.facePosition(), 30, cv::Scalar(0, 255, 0));
+  }
 }
 #endif
 
+#pragma mark - UI Actions
 @end

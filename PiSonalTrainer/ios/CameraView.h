@@ -10,6 +10,9 @@
 #import <opencv2/opencv.hpp>
 #import <opencv2/videoio/cap_ios.h>
 #import <opencv2/core.hpp>
+#import <opencv2/highgui/highgui.hpp>
+#import <opencv2/imgproc/imgproc.hpp>
+#import "VideoFaceDetector.hpp"
 #endif
 
 #ifndef __IPHONE_4_0
@@ -21,10 +24,11 @@
 #import <Foundation/Foundation.h>
 #import <React/RCTView.h>
 #import <React/RCTLog.h>
+#import <React/RCTBridgeModule.h>
 #import <Availability.h>
 #endif
 
-@interface CameraView : RCTView <CvVideoCameraDelegate>
+@interface CameraView : RCTView <CvVideoCameraDelegate, RCTBridgeModule>
 
 // OpenCV-related properties
 @property (nonatomic, retain) IBOutlet UIImageView *imageView;

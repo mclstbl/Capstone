@@ -7,9 +7,10 @@
 //
 
 #ifdef __cplusplus
-#import <opencv2/opencv.hpp>
 #import <opencv2/videoio/cap_ios.h>
+#import <opencv2/opencv.hpp>
 #import <opencv2/core.hpp>
+#import "PTOpenCVUtils.hpp"
 #endif
 
 #ifndef __IPHONE_4_0
@@ -21,18 +22,19 @@
 #import <Foundation/Foundation.h>
 #import <React/RCTView.h>
 #import <React/RCTLog.h>
+#import <React/RCTBridgeModule.h>
 #import <Availability.h>
 #endif
 
-@interface CameraView : RCTView <CvVideoCameraDelegate>
+@interface CameraView : RCTView <CvVideoCameraDelegate, RCTBridgeModule>
 
 // OpenCV-related properties
-@property (nonatomic, retain) IBOutlet UIImageView *imageView;
+@property (nonatomic, retain) UIImageView *imageView;
 @property (nonatomic, retain) CvVideoCamera* videoCamera;
 
 // Other UI properties
-@property (strong, nonatomic) IBOutlet UIButton *quitButton;
-@property (strong, nonatomic) IBOutlet UIButton *saveButton;
-@property (strong, nonatomic) IBOutlet UIButton *resetButton;
+@property (strong, nonatomic) UIButton *quitButton;
+@property (strong, nonatomic) UIButton *saveButton;
+@property (strong, nonatomic) UIButton *resetButton;
 
 @end

@@ -11,4 +11,7 @@
 #import <React/RCTViewManager.h>
 
 @interface NativeCV : RCTViewManager <RCTBridgeModule>
+
+@property (strong, nonatomic) CameraView *cameraView;
+
 @end

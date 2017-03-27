@@ -1,0 +1,308 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{enumerate}
+% Display only levels as deep as subsection in tableofcontents
+\setcounter{tocdepth}{2}
+
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{longtable}
+\graphicspath{ {images/} }
+\usepackage{array}
+
+\usepackage{multirow,booktabs}
+
+% Define function subcommands
+\newcommand{\name}[1]{\hline \multicolumn{2}{|l|}{\texttt{#1}} }
+\newcommand{\inp}[1]{\hline \textbf{Input:} & #1}
+\newcommand{\out}[1]{\hline \textbf{Output:} & #1}
+\newcommand{\desc}[1]{\hline \textbf{Description:} & #1 }
+
+% Define function command
+\newcommand{\fcn}[4]{
+    \begin{center}
+    \begin{tabular}{|p{2cm} p{10cm}|}
+    \hline
+    \name{#1} \\
+    \inp{#2} \\
+    \out{#3} \\
+    \desc{#4} \\
+    \hline
+    \end{tabular}
+    \end{center}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% GRAPHS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{tikz}
+\usepackage{verbatim}
+\usetikzlibrary{positioning,arrows,shapes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% HEADER
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{PiSonal Trainer: Weight Lifting Performance Tracker}
+\fancyfoot[L]{System Architecture}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Use this to pad tables
+\usepackage{array}
+\setlength\extrarowheight{6pt}
+
+% Define tab command
+\newcommand\tab{\hspace*{2cm}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{
+PiSonal Trainer: Weight Lifting Performance Tracker\\
+\Large {Test Report}
+}
+\date{March 26, 2017}
+\author{Birunthaa Umamahesan \and Micaela Estabillo \and Simarpreet Singh}
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% COVER PAGE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\thispagestyle{plain}
+\pagenumbering{gobble}
+\maketitle
+\vfill
+\begin{center}
+    Prepared for Computer Science 4ZP6: Capstone Project \\
+    Instructor: Dr. Wenbo He
+    Fall/Winter 2016-2017\\
+\end{center}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TABLE OF CONTENTS AND REVISION HISTORY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tableofcontents
+
+\listoffigures
+
+\listoftables
+
+\thispagestyle{plain}
+\pagenumbering{gobble}
+
+\section*{Revision History}
+\begingroup
+\begin{tabular}{ | p{2cm} | p{1.5cm} | p{3.8cm} | p{7cm} |} 
+    \hline
+    \textbf{Date} & \textbf{Version} & \textbf{Primary Author} & \textbf{Comment}\\
+    \hline
+    03/25/2017 & 1.00 & Micaela Estabillo & Finalize document draft\\
+    \hline
+    03/25/2017 & 1.00 & Birunthaa Umamahesan & Create document outline\\
+    \hline
+\end{tabular}
+    \captionof{table}{Revision history}
+\endgroup
+
+
+\begin{center}
+% Volere Edition 16
+%We acknowledge that this document uses material from the Volere Requirements Specification Template, copyright © 1995 – 2012 the Atlantic Systems Guild Limited.
+\end{center}
+
+\newpage
+
+\clearpage
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+This report illustrates the results of both the system tests and requirements tests on PiSonal Trainer. The system tests for the functional requirements are reported based on each individual module of the application. The non-functional tests include tests for user experience.
+
+\section{Automated Tests}
+Automated tests have been used in this project to unit test various parts of the system, and to gather data for coverage analysis. The application’s components fall into two main parts: the front end react-native mobile application, and the back end transmission of data to and from the mobile application. 
+
+The client side react-native components were tested using Jest, a JavaScript unit-testing framework.  Unit tests were written for each module of the application to ensure that every method functions as intended, and that all exceptions are handled.
+
+The server side data processing and transmitting was tested using the using PostMan. PostMan is a tool for testing APIs, which can be used to test operations by setting endpoints and the expected server responses. We use PostMan because it provides features that  enhance the testing experience, such as calculating a response's total round trip time, and enabling overloading to test the server's performance. Through this server side testing we can detect broken links and endpoints.
+
+Moreover, we have been executing these tests on a daily basis and also between every pull request submission. This ensures that new code changes do not break the system.
+
+
+\section{Manual Tests}
+We manually tested the system ourselves. All the group members used the PiSonal Trainer app on a daily basis, in order to ensure that the application is executing to its potential.
+
+Whenever a new exercise or movement was added to those that the app can detect, we extensively tested that it could be detected during typical (i.e., in a gym or with real weights) usage of the app.
+
+Moreover, we added analytics collection that run in the background in order for us to see the overall endurance of the system. Since the app will be used by users, they will play the role of manual testers by sending back usage data.
+
+\section{System Tests}
+In this section the test cases conducted on each module is illustrated. The test cases are mapped to the requirements. [Note: our current requirements have changed from our previous document and will be updated].
+
+\subsection{Registration}
+\begingroup
+\begin{tabular}{ | p{0.5cm} | p{2cm} | p{2cm} | p{2cm} |p{2cm} |p{2cm} |p{1cm} |} 
+    \hline
+    \textbf{No.} & \textbf{Test Case} & \textbf{Initial State} & \textbf{Input}& \textbf{Expected Output}& \textbf{Actual Output}& \textbf{Result}\\
+    \hline
+    1.1 & User Registration & Landing page, empty fields &  Enter your full name, username, email, and password into the field & Redirected to main application page & As expected. & PASS\\
+    \hline
+    1.2 & User Registration & Landing page, empty fields & Empty fields and click register & Remain on same page and display error message. & As expected. & PASS\\
+    \hline
+    1.3 & User Registration & Landing page, empty fields & Enter email address that already exists in database & Remain on same page and display error message. & As expected. & PASS\\
+    \hline
+\end{tabular}
+    \captionof{table}{Registration test case}
+\endgroup
+
+\subsection{Login}
+\begingroup
+\begin{tabular}{ | p{0.5cm} | p{2cm} | p{2cm} | p{2cm} |p{2cm} |p{2cm} |p{1cm} |} 
+    \hline
+    \textbf{No.} & \textbf{Test Case} & \textbf{Initial State} & \textbf{Input}& \textbf{Expected Output}& \textbf{Actual Output}& \textbf{Result}\\
+    \hline
+    2.1 & User Login & Landing page, empty fields &  Enter valid username and password into the field & Redirected to explorer page & As expected. & PASS\\
+    \hline
+    2.2 & User Login & Landing page, empty fields &  Enter invalid username and password combination into the field & Remain on login page and display error message & As expected. & PASS\\
+    \hline
+    2.3 & User Login & Landing page, empty fields & Empty username and/or password  & Remain on login page and display error message & As expected. & PASS\\
+    \hline
+\end{tabular}
+    \captionof{table}{Login test case}
+\endgroup
+
+
+\subsection{Explorer}
+\begingroup
+\begin{tabular}{ | p{0.5cm} | p{2cm} | p{2cm} | p{2cm} |p{2cm} |p{2cm} |p{1cm} |} 
+    \hline
+    \textbf{No.} & \textbf{Test Case} & \textbf{Initial State} & \textbf{Input}& \textbf{Expected Output}& \textbf{Actual Output}& \textbf{Result}\\
+    \hline
+    3.1 & Navigate to explorer page & Currently on any other page &  Click on the exlorer button using the navigation bar & Redirected to explorer page & As expected. & PASS\\
+    \hline
+    3.2 & Explorer page updates feed in real time & On explorer page & No input & Display latest news feed if any & As expected. & PASS\\
+    \hline
+\end{tabular}
+    \captionof{table}{Explorer test case}
+\endgroup
+
+
+\subsection{Progress}
+\begingroup
+\begin{tabular}{ | p{0.5cm} | p{2cm} | p{2cm} | p{2cm} |p{2cm} |p{2cm} |p{1cm} |} 
+    \hline
+    \textbf{No.} & \textbf{Test Case} & \textbf{Initial State} & \textbf{Input}& \textbf{Expected Output}& \textbf{Actual Output}& \textbf{Result}\\
+    \hline
+    4.1 & Navigate to progress page & Currently on any other page &  Click on the progress button using the navigation bar & Redirected to progress page & As expected. & PASS\\
+    \hline
+    4.2 & Update progress view to display weekly from daily & On progress page & Click the weekly button & Display data in a weekly format. List data and graph gets updated.  & As expected. & PASS\\
+    \hline
+    4.3 & Update progress view to display daily from weekly & On progress page & Click the daily button & Display data in a daily format.List data and graph gets updated. & As expected. & PASS\\
+    \hline
+\end{tabular}
+    \captionof{table}{Progress test case}
+\endgroup
+
+
+\subsection{Log}
+\begingroup
+\begin{tabular}{ | p{0.5cm} | p{2cm} | p{2cm} | p{2cm} |p{2cm} |p{2cm} |p{1cm} |} 
+    \hline
+    \textbf{No.} & \textbf{Test Case} & \textbf{Initial State} & \textbf{Input}& \textbf{Expected Output}& \textbf{Actual Output}& \textbf{Result}\\
+    \hline
+    5.1 & Navigate to log page & Currently on any other page &  Click on the log button using the navigation bar & Redirected to log page & As expected. & PASS\\
+    \hline
+    5.2 & Launch camera to log workout & On log page & Choose the appropriate work out type. Click the "Use camera" button & Camera is launched from application. & As expected. & PASS\\
+    \hline
+    5.3 & Detect weight using camera & Camera turned on & Stand in your workout position. Hold the weight facing camera. & Green dot should appear on the screen if weight is detected & As expected. & PASS\\
+    \hline
+    5.4 & Track weight movement using camera & Camera turned on and green dot is displayed on screen & Move the weight as per workout  & Green dot should follow the weight movement & As expected. & PASS\\
+    \hline
+    5.5 & Count sets and repetitions using movement & Camera turned on and green dot is displayed on screen & Move the weight as per workout  & On the top right of the screen the set and repetition counter should update accordingly. & As expected. & PASS\\
+    \hline
+    5.6 & Input workout data manually  & On log page & Choose the appropriate work out type from following options.  & Fields should appear to enter data regarding workout. Must be able to save data & As expected. & PASS\\
+    \hline
+\end{tabular}
+    \captionof{table}{Log test case}
+\endgroup
+
+
+\subsection{Settings}
+\begingroup
+\begin{tabular}{ | p{0.5cm} | p{2cm} | p{2cm} | p{2cm} |p{2cm} |p{2cm} |p{1cm} |} 
+    \hline
+    \textbf{No.} & \textbf{Test Case} & \textbf{Initial State} & \textbf{Input}& \textbf{Expected Output}& \textbf{Actual Output}& \textbf{Result}\\
+    \hline
+    6.1 & Navigate to settings page & Currently on any other page &  Click on the settings button using the navigation bar & Redirected to settings page & As expected. & PASS\\
+    \hline
+    6.2 & Log out of application & On settings page & Click logout option button & Redirect to Log In page  & As expected. & PASS\\
+    \hline
+    6.3 & Report bug & On settings page & Click "Report bug" button & Redirect to report bug page. Fields should be enabled for text to be entered and submitted. & As expected. & PASS\\
+    \hline
+\end{tabular}
+    \captionof{table}{Settings test case}
+\endgroup
+
+
+\section{Non-Functional Tests}
+\begingroup
+\begin{tabular}{ | p{0.5cm} | p{2cm} | p{2cm} | p{2cm} |p{2cm} |p{2cm} |p{1cm} |} 
+    \hline
+    \textbf{No.} & \textbf{Test Case} & \textbf{Initial State} & \textbf{Input}& \textbf{Expected Output}& \textbf{Actual Output}& \textbf{Result}\\
+    \hline
+    7.1 & Textual content on the screen check & On explorer page & Navigate through all pages  & Textual content on the application is only 20\%  &As expected. & PASS\\
+    \hline
+    7.2 & Application simple to use & On log page & Click on "Use camera" option to log data & The time taken for users to use the application must be less than the time for manual entry of their work out.  & As expected. & PASS\\
+    \hline
+    7.3 & Scalability and Extensibility & On log page & Click on "Use camera" button & The camera gives the accurate count of moving objects in the screen (at least one when there is someone working out). & As expected. & PASS\\
+    \hline
+\end{tabular}
+    \captionof{table}{Non-functional test case}
+\endgroup
+
+
+\subsection{User Experience Test}
+The user experience test for PiSonal Trainer was evaluated by surveying test participants their opinion on the functionality of the application. The results from the survey are displayed in table User Experience Survey Results. 
+
+\begingroup
+\begin{tabular}{ | p{2cm} | p{2cm} | p{3cm} | p{3cm} | p{3cm} |} 
+    \hline
+    \textbf{Participant} &\textbf{Age}& \textbf{Camera is non-obtrusive} & \textbf{Personalization and Internalization} & \textbf{Learning Period}\\
+    \hline
+    A & 22 & Yes & Yes  & 4 minutes\\
+    \hline
+    B & 25 & Yes & Yes  & 5 minutes\\
+    \hline
+    C & 15 & Yes & No  & 15 minutes\\
+    \hline
+    D & 16 & Yes & Yes  & 13 minutes\\
+    \hline
+    E & 20 & Yes & Yes  & 6 minutes\\
+    \hline
+    F & 20 & Yes & Yes  & 5 minutes\\
+    \hline
+    G & 15 & No & Yes  & 12 minutes\\
+    \hline
+    H & 16 & Yes & Yes  & 11 minutes\\
+    \hline
+\end{tabular}
+    \captionof{table}{User Experience Survey Results}
+\endgroup
+
+\subsubsection{User Experience Survey Discussion}
+Examining the survey results, we came to understand the common trends of users experience. Overall the users appreciated the camera’s functionality to track and update their workout. Only one person from our test population had a concern with the camera, out of 8 people. Also, the average time spent to handle the application, as a new user was approximately 9 minutes. From the provided feedback, this number decreased over time as they continue to use the application. Hence, the results are positive and meets our current expectations. 
+
+\section{Summary of Changes}
+In the future, the manual tests can be improved by having non-members of the group perform tasks and report back their observations. This would improve our testing by revealing whether the app is intuitive to use, and if it works as expected even if the user is not aware of how the backend software functions. Moreover, the user interface can be improved by getting feedback from more testers, and refining the flow of the application based on the results. With these changes, we hope to make using PiSonal Trainer easy and intuitive for others.
+
+\end{document}

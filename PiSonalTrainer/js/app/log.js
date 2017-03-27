@@ -1,23 +1,68 @@
+'use strict';
 import React, { Component } from 'react';
-import { View, Image, TouchableOpacity } from 'react-native';
+import { requireNativeComponent, View, Image, TouchableOpacity, StyleSheet, NativeModules } from 'react-native';
 import { Container, Content, Header, Button, Icon, Title, H1, H2, H3, Text, Input, InputGroup} from 'native-base';
 import AppTheme from './theme';
-import RNOpenCV from './camera';
 
 import {insertLog} from './mongodb.js';
+
+const RNOpenCVNative = requireNativeComponent('NativeCV',null);
+const CameraModule = NativeModules.CameraView;
 
 class Log extends Component {
   constructor(props){
       super(props);
       this.state = {
           showAddLog: false,
+          showCamera: false
       };
   }
   render() {
     if(this.state.showCamera) {
-        console.log("Showing camera");
         return (
-            <RNOpenCV user={this.props.user} renderFooter={()=>this.renderFooter()} />
+            <View>
+                <RNOpenCVNative {...this.props} />
+                <View style={styles.buttonbar}>
+                    <Button style={styles.button1}
+                    onPress={()=>{
+                        CameraModule.quit((error, reps) => {
+                          if (error) {
+                            console.error(error);
+                          } else {
+                            this.setState({
+                                reps: 0,
+                                showCamera: false,
+                                showAddLog: true
+                            });
+                          }
+                        });
+                    }}>
+                    Cancel
+                    </Button>
+                    <Button style={styles.button2}
+                    onPress={()=>{
+                        CameraModule.quit((error, reps) => {
+                          if (error) {
+                            console.error(error);
+                          } else {
+                            this.setState({
+                                reps: reps,
+                                showCamera: false,
+                                showAddLog: true
+                            });
+                            console.log(this.state.reps.toString());
+                          }});
+                    }}>
+                    Save and Quit
+                    </Button>
+                    <Button style={styles.button3}
+                        onPress={()=>{
+                            CameraModule.reset();
+                        }}>
+                        Reset
+                    </Button>
+                </View>
+            </View>
         );
     }
     if(this.state.showAddLog){
@@ -208,5 +253,30 @@ class Log extends Component {
       })
   }
 }
+
+var styles = StyleSheet.create({
+    buttonbar: {
+        paddingTop:30,
+        paddingBottom:10,
+        justifyContent: 'space-around',
+        flexDirection:'row',
+        alignItems: 'center'
+    },
+    button1:{
+        width: 80,
+        height: 70,
+        backgroundColor: 'red'
+    },
+    button2:{
+        width: 150,
+        height: 70,
+        backgroundColor: 'green'
+    },
+    button3:{
+        width: 80,
+        height: 70,
+        backgroundColor: 'orange'
+    }
+});
 
 module.exports = Log;

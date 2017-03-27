@@ -17,6 +17,8 @@ RCT_EXPORT_MODULE();
 - (CameraView *)view
 {
   CameraView *cameraView = [[CameraView alloc] init];
+  self.cameraView = cameraView;
   return cameraView;
 }
+
 @end

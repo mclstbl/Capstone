@@ -78,8 +78,7 @@ Do image processing here! processImage gets called by the delegate for each fram
 {
   // Do some OpenCV stuff with the image
   // Call functions defined in PTOpenCVUtils
-  test();
-  reps = 10;
+  processVideoFrame(image, reps);
 }
 #endif
 

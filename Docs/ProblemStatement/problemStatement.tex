@@ -3,12 +3,38 @@
 
 \title{PiSonal Trainer: Weight Lifting Performance Tracker}
 \author{\textbf{Team BMS} \\ Birunthaa Umamahesan 1203142 \\ Micaela Estabillo 1202859 \\ Simarpreet Singh 1216728}
-\date{September 28, 2016}
+\date{April 1, 2017}
 
 \begin{document}
 
+\thispagestyle{plain}
+\pagenumbering{gobble}
 \maketitle
 
+\newpage
+\tableofcontents
+
+\section*{Revisions}
+\begin{center}
+    \begin{tabular}{ | l | l | l | c |} 
+    \hline
+    Date & Version & Comment \\ [0.5ex]
+    \hline
+    09/28/2016 & 0.0 & Initial revision  \\ 
+    \hline
+    04/01/2017 & 1.0 & Incorporate feedback from version 0 \\
+    \hline
+    \end{tabular}
+\end{center}
+
+\thispagestyle{plain}
+\pagenumbering{gobble}
+
+\newpage
+
+\clearpage
+\setcounter{page}{1}
+\pagenumbering{arabic}
 \section{Problem statement}
 
 There are many fitness-tracking apps that people use to track their daily fitness routine and
@@ -16,10 +42,45 @@ dieting habits. However, the available fitness apps and wearables only go as far
 of heartbeat, calories and steps. This may be sufficient for cardiovascular exercises but when it 
 comes to muscle training, it is still common for people to use the traditional method of logging 
 their progress in a book (i.e., a user might log their workout to keep track of the weights they 
-are lifting to evaluate performance).  Using this method requires the person to take note of the 
+are lifting to evaluate performance). Using this method requires the person to take note of the 
 weight used, the number of repetitions and the sets completed. To date, there is no application 
 that automatically calculates and summarizes a user’s personal record for a specific muscle 
 training machine, and everyone must make note of their performance after they have completed their 
 workout.
+
+\section{Challenges}
+Challenges in making this app include:
+\begin{itemize}
+    \item making the app user-friendly enough to convince users to use the app instead of other methods,
+    \item using computer vision through a smartphone app,
+    \item implementing an algorithm that accurately counts users' movements, and
+    \item ensuring that the user's workout data is transmitted even though they do not have internet connectivity while using the app.
+\end{itemize}
+
+\section{Objectives}
+Creating the PiSonal mobile app to track a user's fitness habits aims to achieve the following goals:
+\begin{itemize}
+    \item Remove effort involved in manually recording workout statistics by using computer vision to count reps and sets.
+    \item Improve availability of user's data by keeping records in a database.
+    \item Provide easy access to historical data by analyzing and graphically presenting performance data over time.
+\end{itemize}
+
+\newpage
+\section{Assumptions}
+In order to make PiSonal Trainer, we made the following assumptions about gym users and facilities:
+\begin{itemize}
+    \item Gym facilities allow photography in their premises.
+    \item Gym equipment is colour-coded so that they can be detected by a camera.
+    \item Workout areas have proper lighting such that colours can be distinguised by a camera.
+    \item Gym users exercise with proper form and move at the right pace so that their movement is recognized by our computer vision algorithm.
+    \item Users of the app have some form of internet connectivity enabled in their smartphones.
+\end{itemize}
+
+\section{Constraints}
+Some constraints that we kept in mind while creating the app include:
+\begin{itemize}
+    \item The user needs to know how to position the camera in order for the equipment and movement to be detected.
+    \item Users may not have internet connectivity while working out so data must be stored until it is transmitted.
+\end{itemize}
 
 \end{document}

@@ -59,9 +59,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{
 PiSonal Trainer: Weight Lifting Performance Tracker\\
-\Large {Test Plan Version 0}
+\Large {Test Plan}
 }
-\date{November 2, 2016}
+\date{April 1, 2017}
 \author{Birunthaa Umamahesan \and Micaela Estabillo \and Simarpreet Singh}
 
 \begin{document}
@@ -91,15 +91,17 @@ PiSonal Trainer: Weight Lifting Performance Tracker\\
 \begingroup
 \begin{tabular}{ | p{2cm} | p{1.5cm} | p{3.8cm} | p{7cm} |} 
     \hline
-    \textbf{Date} & \textbf{Version} & \textbf{Primary Author} & \textbf{Comment}\\
+    \textbf{Date} &  \textbf{Primary Author} & \textbf{Comment}\\
     \hline
-    28/10/2016 & 1.00 & Micaela Estabillo & Created document and drafted system testing section\\ 
+    28/10/2016 &  Micaela Estabillo & Created document and drafted system testing section\\ 
     \hline
-    31/10/2016 & 1.00 & Birunthaa Umamahesan & Drafted overview section and non-functional test plan\\
+    31/10/2016 & Birunthaa Umamahesan & Drafted overview section and non-functional test plan\\
     \hline
-    01/11/2016 & 1.00 & Simarpreet Singh & Drafted proof of concept testing and functional requirements test plan \\
+    01/11/2016 & Simarpreet Singh & Drafted proof of concept testing and functional requirements test plan \\
     \hline
-    02/11/2016 & 1.00 & Micaela Estabillo & Final editing and proofreading for revision 0\\
+    02/11/2016 &  Micaela Estabillo & Final editing and proofreading for revision 0\\
+    \hline
+    01/04/2017 & Birunthaa Umamahesan & Final editing and proofreading for revision 1\\
     \hline
 \end{tabular}
     \captionof{table}{Revision history}
@@ -171,7 +173,7 @@ Manual testing will also be used to assess the overall user experience of the ap
     \hline
     $\lambda$ & 20\% & Phase II testing improvement target\\
     \hline
-     $\gamma$ & 1\% & Counter increment for repetition and set count.\\
+     $\gamma$ & 1 & Counter increment for repetition and set count.\\
     \hline
 \end{tabular}
 \end{center}
@@ -205,7 +207,7 @@ As a user does bicep curls in front of the laptop our prototype will count repet
 
 The prototype will also include a backend server conencted to a database with a well-designed schema. The backend server will be extensively load-tested by hitting it with mock requests to demonstrate that it can handle stress and overloads due to computation and multiple requests.
 
-\subsection{ Proof of Concept Test}
+\subsection{Proof of Concept Test}
 The proof of concept is given in test case format to adhere with the presentation of the other tests in this document.
 \begingroup
 \begin{testcase}
@@ -723,3 +725,22 @@ The timeline below is structured roughly to match the anticipated chronology of 
 
 
 \end{document}
+
+Think about
+- A system consists of several components, what are the functional components? test plan of individual components?
+- How to test system as a whole?
+- What are your testing scenarios? Are they typical scenarios? Do your scenarios cover all or most of appplication scenarios?
+- Do you need to stress-test your system? How?
+- Do you need to write a script to automatically test your system? What is your plan?
+- Note that we prefer cost-efficient testing plan
+
+Test Plan
+- What to test
+- Schedule/timeline for testing
+
+Testing Scenarios
+- Description of scenarios
+- Use of datasets, generated data, traces from real-world measurements
+- Metrics
+
+Expected results

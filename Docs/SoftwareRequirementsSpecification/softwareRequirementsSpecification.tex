@@ -29,7 +29,6 @@
 % Define tab command
 \newcommand\tab{\hspace*{2cm}}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % TITLE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -37,7 +36,7 @@
 PiSonal Trainer: Weight Lifting Performance Tracker\\
 \Large {Software Requirements Specification Version 0}
 }
-\date{October 12, 2016}
+\date{April 1, 2017}
 \author{Birunthaa Umamahesan \and Micaela Estabillo \and Simarpreet Singh}
 
 \begin{document}
@@ -71,19 +70,21 @@ PiSonal Trainer: Weight Lifting Performance Tracker\\
 
 \section*{Revision History}
 \begingroup
-\begin{tabular}{ | p{2cm} | p{1.5cm} | p{3.8cm} | p{7cm} |} 
+\begin{tabular}{ | p{2cm} |  p{3.8cm} | p{7cm} |} 
     \hline
-    \textbf{Date} & \textbf{Version} & \textbf{Primary Author} & \textbf{Comment}\\
+    \textbf{Date} & \textbf{Primary Author} & \textbf{Comment}\\
     \hline
-    10/12/2016 & 1.00 & Micaela Estabillo & Final editing and proofreading for revision 0\\ 
+    04/01/2017 & Birunthaa Umamahesan & Final editing and proofreading for revision 1\\ 
     \hline
-    10/12/2016 & 1.00 & Birunthaa Umamahesan & Update project drivers and project constraints \\
+    10/12/2016 & Micaela Estabillo & Final editing and proofreading for revision 0\\ 
     \hline
-    10/12/2016 & 1.00 & Simarpreet Singh & Update functional requirements\\ 
+    10/12/2016 & Birunthaa Umamahesan & Update project drivers and project constraints \\
     \hline
-    10/11/2016 & 1.00 & Micaela Estabillo & Adding non-functional requirements\\
+    10/12/2016 & Simarpreet Singh & Update functional requirements\\ 
     \hline
-    10/7/2016 & 1.00 & Micaela Estabillo & Initial skeleton version\\
+    10/11/2016 & Micaela Estabillo & Adding non-functional requirements\\
+    \hline
+    10/7/2016 & Micaela Estabillo & Initial skeleton version\\
     \hline
 \end{tabular}
     \captionof{table}{Revision history}
@@ -189,28 +190,18 @@ Other stakeholders of this project include:
 
 \subsection{Mandated Constraints}
 \subsubsection{Solution Constraints}
+
 \textbf{Constraint} \#: 1
-\raggedright
 
-\textbf{Description}: The application must recognize the gym’s weight via a Quadratic Residue code attached to the weight that must be scanned
+\textbf{Description}: The user activate the camera to recognize the weight 
 
-\textbf{Rationale}: Provide unique Quadratic Residue codes for each machine to identify which machine/weight is being used. %Should be a simple solution, which supports multiple gyms
+\textbf{Rationale}: The user can select the "log using camera" option in the application to trigger the camera to turn on and detect the weight.
 
-\textbf{Fit Criterion}: Must be approved by tester and developer. They must confirm that the weight recognized by the Quadratic Residue code is accurate.
+\textbf{Fit Criterion}: Must be approved by tester and developer. They must confirm that the camera gets activated once user selects the "log using camera" option. 
 
 \medskip
 
 \textbf{Constraint} \#: 2
-
-\textbf{Description}: The Quadratic Residue code scanned must activate the camera to recognize the weight being used
-
-\textbf{Rationale}: The application triggers the camera to turn on once it detects the weight via a Quadratic Residue code and recognizes the weight
-
-\textbf{Fit Criterion}: Must be approved by tester and developer. They must confirm that the camera gets activated once the Quadratic Residue code is scanned. 
-
-\medskip
-
-\textbf{Constraint} \#: 3
 
 \textbf{Description}: The data from user’s routine must be sent back and stored
 
@@ -220,7 +211,7 @@ Other stakeholders of this project include:
 
 \medskip
 
-\textbf{Constraint} \#: 4
+\textbf{Constraint} \#: 3
 
 \textbf{Description}: The application must run on iOS or Android operating system
 
@@ -347,14 +338,11 @@ N/A
     \hline
     Station & Station Identifier & Class \\
     \hline
-    Quadratic Residue code & Quadratic Residue code Image & Attribute/Element \\
-    \hline
     User Identifier & Username and Password & Attribute/Element \\
     \hline
     Exercise Identifier & Exercise name, Muscle groups, Equipment assigned & Attribute/Element \\
     \hline
-    Weight Identifier & Weight in pounds, Quadratic Residue code, Equipment assigned & Attribute/Element \\
-    \hline
+  
     Equipment Identifier & Equipment type, Station assigned & Attribute/Element \\
     \hline
     Station Identifier & Camera assigned & Attribute/Element \\
@@ -382,15 +370,13 @@ N/A
     \hline
     PUC No & PUC Name & Actor/s & Input \& Output \\
     \hline
-    1 & Set desired weight & Gym Equipment and User & Quadratic Residue code (in)\\
+    1 & Register for an account & User & Mobile phone (in) \\
     \hline
-    2 & Exercise & Gym & Station camera (in) \\
+    2 & Log in to an account & User & Mobile phone (in) \\
     \hline
     3 & View fitness statistics & User & Mobile phone (out) \\
     \hline
-    4 & Register for an account & User & Mobile phone (in) \\
-    \hline
-    5 & Log in to an account & User & Mobile phone (in) \\
+    4 & Log workout  & User & Mobile phone (in) \\
     \hline
 \end{tabular}
 \captionof{table}{Product Use Case (PUC) Summary Table}
@@ -435,29 +421,8 @@ N/A
 % END REQUIREMENT FORMAT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 \textbf{Requirement} \#: 1 \tab \textbf{Event/Use Case}: 1
-\tab \textbf{Priority}: High
-
-\textbf{Description}: The product’s mobile application shall scan a Quadratic Residue code posted on a gym equipment
-
-\textbf{Rationale}: To be able to capture Quadratic Residue code associated with equipment
-
-\textbf{Fit Criterion}: Product’s mobile application shall use the camera application on the device to take a picture of the Quadratic Residue code.
-
-\medskip
-
-\textbf{Requirement} \#: 2 \tab \textbf{Event/Use Case}: 1
-\tab \textbf{Priority}: High
-
-\textbf{Description}: The product’s mobile application shall be able to identify an equipment’s weight using its Quadratic Residue code
-
-\textbf{Rationale}: To be able to record the equipment’s associated weight
-
-\textbf{Fit Criterion}: Once a Quadratic Residue code is scanned, the application shall be able to identify the weight of an equipment and set it as the current workout weight.
-
-\medskip
-
-\textbf{Requirement} \#: 3 \tab \textbf{Event/Use Case}: 1
 \tab \textbf{Priority}: High
 
 \textbf{Description}: The product’s mobile application shall require a user to first register an account before using the service
@@ -468,7 +433,7 @@ N/A
 
 \medskip
 
-\textbf{Requirement} \#: 4 \tab \textbf{Event/Use Case}: 1, 4, 5
+\textbf{Requirement} \#: 2 \tab \textbf{Event/Use Case}: 1
 \tab \textbf{Priority}: Medium
 
 \textbf{Description}: The product’s mobile application shall provide popup error messages
@@ -479,7 +444,7 @@ N/A
 
 \medskip
 
-\textbf{Requirement} \#: 5 \tab \textbf{Event/Use Case}: 3
+\textbf{Requirement} \#: 3 \tab \textbf{Event/Use Case}: 3
 \tab \textbf{Priority}: High
 
 \textbf{Description}: The product’s mobile application shall display the fitness statistics through visual graphs
@@ -490,7 +455,7 @@ N/A
 
 \medskip
 
-\textbf{Requirement} \#: 6 \tab \textbf{Event/Use Case}: 2
+\textbf{Requirement} \#: 4 \tab \textbf{Event/Use Case}: 4
 \tab \textbf{Priority}: High
 
 \textbf{Description}: The product’s camera shall track the motion of the gym equipment
@@ -501,7 +466,7 @@ N/A
 
 \medskip
 
-\textbf{Requirement} \#: 7 \tab \textbf{Event/Use Case}: 1, 2, 3
+\textbf{Requirement} \#: 5 \tab \textbf{Event/Use Case}: 4, 3
 \tab \textbf{Priority}: High
 
 \textbf{Description}: The product shall be able to store data about the user’s exercises (sets, repetitions and weight) into the database
@@ -512,10 +477,10 @@ N/A
 
 \medskip
 
-\textbf{Requirement} \#: 8 \tab \textbf{Event/Use Case}: 3
+\textbf{Requirement} \#: 6 \tab \textbf{Event/Use Case}: 4, 3
 \tab \textbf{Priority}: High
 
-\textbf{Description}: The product shall be able to calculate a user’s workout information using data from the camera and Quadratic Residue code scanner
+\textbf{Description}: The product shall be able to calculate a user’s workout information using data from the camera 
 
 \textbf{Rationale}: To present workout reports to the user
 
@@ -537,7 +502,7 @@ N/A
 
 \textbf{Rationale}: To make navigation and easier
 
-\textbf{Fit Criterion}: The product shall enable the user to scan a Quadratic Residue code, workout and then view their statistics by only tapping buttons on the screen instead of typing values such as weight, repetitions or sets.
+\textbf{Fit Criterion}: The product shall enable the user to workout and then view their statistics by only tapping buttons on the screen instead of typing values such as weight, repetitions or sets.
 
 \medskip
 
@@ -554,13 +519,13 @@ N/A
 
 \subsubsection{Style Requirements}
 
-\textbf{Requirement} \#: 2 \tab \textbf{Event/Use Case}: 3, 4, 5 \tab \textbf{Priority}: Medium
+\textbf{Requirement} \#: 2 \tab \textbf{Event/Use Case}: 3, 4 \tab \textbf{Priority}: Medium
 
 \textbf{Description}: The mobile application shall appear simple to use
 
 \textbf{Rationale}: To reduce the amount of time that users need to record their workout statistics
 
-\textbf{Fit Criterion}: The time it takes for a user scan a Quadratic Residue code and work out shall be less than the time it takes for them to write down their workout type, sets, repetitions and weights.
+\textbf{Fit Criterion}: The time it takes for a user log into the application, start the camera and work out shall be less than the time it takes for them to write down their workout type, sets, repetitions and weights.
 
 \medskip
 
@@ -645,16 +610,6 @@ N/A
 
 \medskip
 
-\subsubsection{Requirements for Interfacing with Adjacent Systems}
-\textbf{Requirement} \#: 2 \tab \textbf{Event/Use Case}: 1 \tab \textbf{Priority}: Low
-
-\textbf{Description}: The weight trackers shall minimally affect the weight of the objects onto which they are attached
-
-\textbf{Rationale}: To keep the weight of the equipment as precise as possible
-
-\textbf{Fit Criterion}: The equipment shall weigh up to 0.5\% pounds more than its advertised weight when the Quadratic Residue code is attached to it.
-
-\medskip
 
 \subsection{Maintainability and Support Requirements}
 \subsubsection{Maintenance Requirements}
@@ -668,19 +623,10 @@ N/A
 
 \medskip
 
-\textbf{Requirement} \#: 2 \tab \textbf{Event/Use Case}: 1 \tab \textbf{Priority}: High
-
-\textbf{Description}: Gym employees such as trainees or managers shall be responsible for making sure each piece of equipment has a Quadratic Residue code
-
-\textbf{Rationale}: To make sure that equipment is identifiable by mobile application
-
-\textbf{Fit Criterion}: Each equipment shall have exactly one attached Quadratic Residue code.
-
-\medskip
 
 \subsubsection{Adaptability Requirements}
 
-\textbf{Requirement} \#: 3 \tab \textbf{Event/Use Case}: 1, 3, 4, 5 \tab \textbf{Priority}: Medium
+\textbf{Requirement} \#: 2 \tab \textbf{Event/Use Case}: 1, 3, 4, 5 \tab \textbf{Priority}: Medium
 
 \textbf{Description}: The mobile application shall be easily portable from Android to iOS
 
@@ -703,18 +649,8 @@ N/A
 \medskip
 
 \subsubsection{Integrity Requirements}
-\textbf{Requirement} \#: 2 \tab \textbf{Event/Use Case}: 1 \tab \textbf{Priority}: Medium
 
-\textbf{Description}: The mobile application shall prevent unrecognized Quadratic Residue codes from being logged into the database
-
-\textbf{Rationale}: To enable the product to properly identify exercises and equipment
-
-\textbf{Fit Criterion}: The application shall reject QR codes that are not recognized by the server or database. On the other hand, the application shall accept QR codes that are recognized.
-
-\medskip
-
-
-\textbf{Requirement} \#: 3 \tab \textbf{Event/Use Case}: 2 \tab \textbf{Priority}: Medium
+\textbf{Requirement} \#: 2 \tab \textbf{Event/Use Case}: 2 \tab \textbf{Priority}: Medium
 
 \textbf{Description}: The product shall not store videos or images of users’ workouts in any form
 
@@ -725,7 +661,7 @@ N/A
 \medskip
 
 \subsubsection{Privacy Requirements}
-\textbf{Requirement} \#: 4 \tab \textbf{Event/Use Case}: 3, 5 \tab \textbf{Priority}: High
+\textbf{Requirement} \#: 3 \tab \textbf{Event/Use Case}: 3, 5 \tab \textbf{Priority}: High
 
 \textbf{Description}: Users shall only be able to view workout data that pertains to them
 
@@ -797,3 +733,27 @@ Our project consists of implementing a new application. There are no other featu
 %\section*{Index}
 
 \end{document}
+
+% rough draft
+
+USER WEIGHT APP CAMERA
+
+
+Functional Requirements:
+1. Users should be able to track their weightlifting habits
+
+1a. User shoud be able to scan there phone to identify the weight 
+
+2.
+
+Technical Requirements:
+1.  User should be able to use phone to scan Quadratic Residue code
+2.  Identify weight 
+3.  Start camera 
+4.  Camera detects weight 
+5.  Detects motion to recognize sets and repetitions 
+6.  Store data (sets, repetitions, and weight) into DB
+7.  App reads the DB and displays data
+
+
+green dot will be the "wearable" - can be attached to weight or shirt or skin

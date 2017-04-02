@@ -66,7 +66,7 @@
 PiSonal Trainer: Weight Lifting Performance Tracker\\
 \Large {Detailed Design}
 }
-\date{January 11, 2017}
+\date{April 1, 2017}
 \author{Birunthaa Umamahesan \and Micaela Estabillo \and Simarpreet Singh}
 
 \begin{document}
@@ -104,13 +104,17 @@ PiSonal Trainer: Weight Lifting Performance Tracker\\
     \hline
     \textbf{Date} & \textbf{Version} & \textbf{Primary Author} & \textbf{Comment}\\
     \hline
-    01/10/2017 & 1.00 & Micaela Estabillo & Final editing and proofreading for revision 0\\ 
+    04/01/2017 & 1.00 & Birunthaa Umamahesan & Final  editing and proofreading for revision 1\\ 
     \hline
-    01/09/2017 & 1.00 & Birunthaa Umamahesan & Update user Interface Elements Descriptions \\
+    04/01/2017 & 1.00 & Micaela Estabillo & Adjust technical specifications based on changes\\ 
     \hline
-    01/09/2017 & 1.00 & Simarpreet Singh & Update Module decomposition\\ 
+    01/10/2017 & 0.00 & Micaela Estabillo & Final editing and proofreading for revision 0\\ 
     \hline
-    01/09/2017 & 1.00 & Micaela Estabillo & Initial skeleton version\\
+    01/09/2017 & 0.00 & Birunthaa Umamahesan & Update user Interface Elements Descriptions \\
+    \hline
+    01/09/2017 & 0.00 & Simarpreet Singh & Update Module decomposition\\ 
+    \hline
+    01/09/2017 & 0.00 & Micaela Estabillo & Initial skeleton version\\
     \hline
 \end{tabular}
     \captionof{table}{Revision history}
@@ -131,6 +135,20 @@ PiSonal Trainer: Weight Lifting Performance Tracker\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Templates, Symbols and Conventions Used}
+The modules' functions are specified in the format shown in Table 2.
+
+\begingroup
+\begin{center}
+\fcn
+{nameOfFunction()}
+{List of input variables or actions}
+{List of updated variables or system's response}
+{Description of what the function does}
+\end{center}
+\captionof{table}{Function specification format}
+\endgroup
 
 \section{User Interface Elements Descriptions}
  Pisonal trainer’s user interface (UI) design is presented in this section. Specifically, the UI’s navigation flow and the major UI elements are described. Each element is explained with the support of Norman’s design principles and illustrated with screen images from a mockup.
@@ -173,7 +191,6 @@ Don Norman lists six principles to support software usability. These principles 
     \item Visibility conveys to the user their current state and possible actions\cite{norman}.
 \end{itemize}
 
-\newpage
 \subsection{Pages}
 \subsubsection{Login}
 The login page is the first page that appears when the application is initially opened. It is designed to have strong visibility, such that a new user should know exactly what this page is for and what to do next. There is two empty text fields that indicate user input, and a Login button to proceed. The login button is a constraint as it is disabled until both fields are filled. See Figure 2.
@@ -362,7 +379,7 @@ The settings page can be used to logout of the account and also change the user�
 \begin{itemize}
     \item Languages of implementation
     \begin{itemize}
-        \item Python
+        \item Objective-C
         \item JavaScript
     \end{itemize}
     \item Supporting frameworks
@@ -372,7 +389,7 @@ The settings page can be used to logout of the account and also change the user�
     \end{itemize}
     \item Supporting technology
     \begin{itemize}
-        \item Macbook Webcam
+        \item Camera on iOS devices
     \end{itemize}
 \end{itemize}
 
@@ -396,3 +413,5 @@ Books, New York, 2013.
 \end{document}
 
 The document should include the system architecture design and component design. You should give the architecture of the system, system components, APIs, algorithms used, solutions to address the challenges mentioned in your previous report, and shows the reasons on your design choices.
+Contact GitHub API Training Shop Blog About
+© 2017 GitHub, Inc. Terms Privacy Security Status Help

@@ -40,11 +40,14 @@ RCT_EXPORT_MODULE();
     self.videoCamera.delegate = self;
     self.videoCamera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
     self.videoCamera.defaultAVCaptureSessionPreset = AVCaptureSessionPreset352x288;
-    self.videoCamera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait;
+    if ( [[UIDevice currentDevice] orientation] == UIInterfaceOrientationPortraitUpsideDown )
+      self.videoCamera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
+    else
+      self.videoCamera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait;
     self.videoCamera.defaultFPS = 30;
     
-    [self.videoCamera adjustLayoutToInterfaceOrientation:UIInterfaceOrientationPortrait];
-
+    // [self.videoCamera adjustLayoutToInterfaceOrientation:UIInterfaceOrientationPortrait];
+    
     // Initialize rep count to zero
     reps = 0;
     

@@ -1,7 +1,8 @@
 'use strict';
 import React, { Component } from 'react';
-import { requireNativeComponent, View, Image, TouchableOpacity, StyleSheet, NativeModules } from 'react-native';
+import { requireNativeComponent, View, Image, TouchableOpacity, StyleSheet, NativeModules, Dimensions } from 'react-native';
 import { Container, Content, Header, Button, Icon, Title, H1, H2, H3, Text, Input, InputGroup} from 'native-base';
+
 import AppTheme from './theme';
 
 import {insertLog} from './mongodb.js';
@@ -9,6 +10,8 @@ import {insertLog} from './mongodb.js';
 import RNOpenCV from './camera';
 const RNOpenCVNative = requireNativeComponent('NativeCV',null);
 const CameraModule = NativeModules.CameraView;
+
+var {height, width} = Dimensions.get('window');
 
 class Log extends Component {
   constructor(props){
@@ -22,7 +25,9 @@ class Log extends Component {
     if(this.state.showCamera) {
         return (
             <View>
-                <RNOpenCV {...this.props} />
+                <View>
+                    <RNOpenCV {...this.props} />
+                </View>
                 <View style={styles.buttonbar}>
                     <Button style={styles.button1}
                     onPress={()=>{
@@ -256,10 +261,10 @@ class Log extends Component {
 }
 
 var styles = StyleSheet.create({
-    buttonbar: { paddingTop:30, paddingBottom:10, justifyContent: 'space-around', flexDirection:'row', alignItems: 'center' },
-    button1:{ width: 80, height: 70, backgroundColor: 'red' },
+    buttonbar: { paddingTop:height - 70, paddingBottom:10, justifyContent: 'space-around', flexDirection:'row', alignItems: 'center' },
+    button1:{ width: 150, height: 70, backgroundColor: 'red' },
     button2:{ width: 150, height: 70, backgroundColor: 'green' },
-    button3:{ width: 80, height: 70, backgroundColor: 'orange' }
+    button3:{ width: 150, height: 70, backgroundColor: 'orange' }
 });
 
 module.exports = Log;

@@ -28,22 +28,12 @@ RCT_EXPORT_MODULE();
   }
   // Calculate button size info
   CGFloat buttonHeight = 70;
-  
   if ((self = [super init])) {
     // Initialize imageView
-    CGRect imageFrame = CGRectMake( 20, 0, screenWidth, screenHeight - buttonHeight);
+    CGRect imageFrame = CGRectMake( 0, 0, screenWidth, screenHeight - buttonHeight);
     UIImageView *imageView = [[UIImageView alloc] initWithFrame: imageFrame];
     [self addSubview:imageView];
     self.imageView = imageView;
-    
-    /*
-    // Add Native buttons
-    self.quitButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.quitButton addTarget:self action:@selector(tap:) forControlEvents:UIControlEventTouchUpInside];
-    [self.quitButton setTitle:@"Cancel" forState:UIControlStateNormal];
-    self.quitButton.frame = CGRectMake(40, buttonScreenPosY, buttonWidth, buttonHeight);
-    [self addSubview:self.quitButton];
-    */
     
     // Set videoCamera attributes
     self.videoCamera = [[CvVideoCamera alloc] initWithParentView: self.imageView];
@@ -53,12 +43,14 @@ RCT_EXPORT_MODULE();
     self.videoCamera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait;
     self.videoCamera.defaultFPS = 30;
     
+    [self.videoCamera adjustLayoutToInterfaceOrientation:UIInterfaceOrientationPortrait];
+
     // Initialize rep count to zero
     reps = 0;
     
     RCTLog(@"Starting camera from CameraView");
     [self.videoCamera start];
-}
+  }
   
   return self;
 }

@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react';
-import { requireNativeComponent, View } from 'react-native';
+import { requireNativeComponent, View, StyleSheet } from 'react-native';
 
 const RNOpenCVNative = requireNativeComponent('NativeCV', RNOpenCV);
 
@@ -10,7 +10,7 @@ class RNOpenCV extends Component {
     }
     render() {
         return (
-            <View>
+            <View style={styles.camera}>
                 <RNOpenCVNative {...this.props} />
             </View>
         );
@@ -18,3 +18,7 @@ class RNOpenCV extends Component {
 }
 
 module.exports = RNOpenCV;
+
+var styles = StyleSheet.create({
+    camera: { position: 'absolute', top: 0, left: 0}
+});

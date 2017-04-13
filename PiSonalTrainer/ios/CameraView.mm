@@ -12,6 +12,10 @@ using namespace cv;
 
 @implementation CameraView{
   int reps;
+  #ifdef __cplusplus
+  std::deque<CvPoint> pts;
+  std::deque<float> slopes;
+  #endif
 }
 
 RCT_EXPORT_MODULE();
@@ -44,9 +48,7 @@ RCT_EXPORT_MODULE();
       self.videoCamera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
     else
       self.videoCamera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait;
-    self.videoCamera.defaultFPS = 30;
-    
-    // [self.videoCamera adjustLayoutToInterfaceOrientation:UIInterfaceOrientationPortrait];
+    self.videoCamera.defaultFPS = 20;
     
     // Initialize rep count to zero
     reps = 0;
@@ -65,17 +67,25 @@ RCT_EXPORT_MODULE();
 
 #pragma mark - Protocol CvVideoCameraDelegate
 
-#ifdef __cplusplus
 /*
 Do image processing here! processImage gets called by the delegate for each frame.
 */
 - (void)processImage:(Mat&)image;
 {
+#ifdef __cplusplus
   // Do some OpenCV stuff with the image
   // Call functions defined in PTOpenCVUtils
-  processVideoFrame(image, reps);
-}
+  bool up, down;
+  up = false, down = false;
+  CvPoint pt;
+  processVideoFrame(image, reps, pts, slopes, up, down, pt);
 #endif
+  if (up) RCTLog(@"PTD UP");
+  if (down) RCTLog(@"PTD DOWN");
+  if (pts.size() > 0) {
+    RCTLog(@"%d %d", pt.x, pt.y);
+  }
+}
 
 #pragma mark - UI Actions
 /*

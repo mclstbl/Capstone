@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <cmath>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/opencv.hpp>
@@ -19,7 +20,6 @@
 
 using namespace cv;
 
-void test();
-void processVideoFrame(Mat &image, int &reps);
+void processVideoFrame(Mat &image, int &reps, std::deque<CvPoint> &pts, std::deque<float> &slopes, bool &up, bool &down, CvPoint &pt);
 
 #endif /* PTOpenCVUtils_hpp */

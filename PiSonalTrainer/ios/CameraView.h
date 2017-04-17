@@ -24,6 +24,7 @@
 #import <React/RCTLog.h>
 #import <React/RCTBridgeModule.h>
 #import <Availability.h>
+#define CV_CAMERA_FPS 20
 #endif
 
 @interface CameraView : RCTView <CvVideoCameraDelegate, RCTBridgeModule>

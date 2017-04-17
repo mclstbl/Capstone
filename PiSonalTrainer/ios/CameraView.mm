@@ -13,8 +13,14 @@ using namespace cv;
 @implementation CameraView{
   int reps;
   #ifdef __cplusplus
-  std::deque<CvPoint> pts;
-  std::deque<float> slopes;
+  //std::deque<CvPoint> pts;
+  cv::Mat path;
+  bool up;
+  bool down;
+  bool stay;
+  CvPoint prev, cur;
+  CvPoint first, last;
+  double distance;
   #endif
 }
 
@@ -48,10 +54,18 @@ RCT_EXPORT_MODULE();
       self.videoCamera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
     else
       self.videoCamera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait;
-    self.videoCamera.defaultFPS = 20;
+    self.videoCamera.defaultFPS = CV_CAMERA_FPS;
     
     // Initialize rep count to zero
     reps = 0;
+    // Initialize directions
+    up = false;
+    down = false;
+    stay = false;
+    // Init
+    prev.x = 0;
+    prev.y = 0;
+    distance = 0;
     
     RCTLog(@"Starting camera from CameraView");
     [self.videoCamera start];
@@ -68,23 +82,27 @@ RCT_EXPORT_MODULE();
 #pragma mark - Protocol CvVideoCameraDelegate
 
 /*
-Do image processing here! processImage gets called by the delegate for each frame.
+Do OpenCV image processing here! processImage gets called by the delegate for each frame.
 */
 - (void)processImage:(Mat&)image;
 {
 #ifdef __cplusplus
-  // Do some OpenCV stuff with the image
   // Call functions defined in PTOpenCVUtils
-  bool up, down;
-  up = false, down = false;
-  CvPoint pt;
-  processVideoFrame(image, reps, pts, slopes, up, down, pt);
-#endif
-  if (up) RCTLog(@"PTD UP");
-  if (down) RCTLog(@"PTD DOWN");
-  if (pts.size() > 0) {
-    RCTLog(@"%d %d", pt.x, pt.y);
+  // Initialize the path matrix - this is expected to only run during processing of the first frame
+  if (path.size() != image.size()) {
+    path = Mat::zeros(image.size(), CV_8UC1);
   }
+//  long size = pts.size();
+  // stay is true when object pauses or object moves off view
+  if (stay) {
+//    pts.clear();
+    path.release();
+    path = Mat::zeros(image.size(), CV_8UC1);
+    stay = false;
+    distance = 0;
+  }
+  processVideoFrame(image, path, reps, up, down, stay, prev, cur, first, last, distance);
+#endif
 }
 
 #pragma mark - UI Actions
@@ -94,6 +112,7 @@ This is called by the react-native side in order to navigate out of this native 
 RCT_EXPORT_METHOD(quit:(RCTResponseSenderBlock)callback)
 {
   // Only return the reps count.This can be changed to an NSDictionary with other values.
+  // FIXME: Return reps and sets NSDictionary
   NSNumber *_reps = [NSNumber numberWithInt:reps];
   callback(@[[NSNull null], _reps]);
 }
@@ -103,6 +122,7 @@ This function resets values but doesn't exit the native view.
 RCT_EXPORT_METHOD(reset)
 {
   reps = 0;
+  // TODO: add sets reset here, and other things that need to be reset
 }
 
 @end

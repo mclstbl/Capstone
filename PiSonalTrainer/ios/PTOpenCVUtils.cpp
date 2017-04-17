@@ -8,104 +8,17 @@
 
 #include "PTOpenCVUtils.hpp"
 
-#define COLLECTEDSLOPES_AMT 5
-#define MAX_VALID_SLOPE 4
-#define N 3
-
 using namespace cv;
 using namespace std;
 
 char DIR_DEBUG[20];
-/*
-Takes a deque of slopes and determines if the arc direction is downward.
-*/
-bool isNegativeArch(std::deque<float> slopes) {
-  bool ret = true;
-  long i;
-  for (i = 1; i < slopes.size(); i++) {
-    // Return if slope is too steep
-    if (abs(slopes[i - 1]) > MAX_VALID_SLOPE || abs(slopes[i]) > MAX_VALID_SLOPE)
-      return false;
-    // Previous slope should be less than current to form an arc
-    ret = ret && (slopes[i - 1] <= slopes[i]);
-    if (! ret) return false;
-  }
-  return ret;
-}
-
-/*
- Takes a deque of slopes and determines if the arc direction is downward.
- */
-bool isPositiveArch(std::deque<float> slopes) {
-  bool ret = true;
-  long i;
-  for (i = 1; i < slopes.size(); i++) {
-    // Return if slope is too steep
-    if (abs(slopes[i - 1]) > MAX_VALID_SLOPE || abs(slopes[i]) > MAX_VALID_SLOPE)
-      return false;
-    // Previous slope should be greater than current to form an arc
-    ret = ret && (slopes[i - 1] >= slopes[i]);
-    if (! ret) return false;
-  }
-  return ret;
-}
-
-/*
-Returns the slope between 2 (x,y) positions a and b
-*/
-float slope(CvPoint a, CvPoint b) {
-  return float(b.y - a.y)/float(b.x - a.x);
-}
 
 /*
 Returns distance between 2 CvPoints
 */
-float dist(CvPoint a, CvPoint b) {
+double dist(CvPoint a, CvPoint b) {
   return sqrt(pow((a.x - b.x), 2) + pow((a.y - b.y), 2));
 }
-
-/*
-Detects direction of object movement based on slopes between
-consecutive points, and also displacement along y-axis
-*/
-void detectDirection(CvPoint prev, CvPoint cur, bool &up, bool &down, int &reps, std::deque<float> &slopes, Mat &image) {
-  float slopeVal = slope(prev, cur);
-
-  up = false, down = false;
-  
-  if (!isnan(slopeVal) && abs(slopeVal) < MAX_VALID_SLOPE &&
-      slopeVal != INFINITY && slopeVal != - INFINITY && slopeVal != 0) {
-    char slope_debug[100];
-    if (slopes.size() >= 1 && slopeVal != slopes[slopes.size() - 1])
-      slopes.push_back(slopeVal);
-    else if (slopes.size() == 0)
-      slopes.push_back(slopeVal);
-    // Debug slopeVal
-    sprintf (slope_debug, "Slope %.2f slopes size %ld", slopeVal, slopes.size());
-    cv::putText(image, slope_debug,
-                Point2f(50, 250),
-                FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 255, 255), 1);
-  
-    if (slopes.size() > COLLECTEDSLOPES_AMT) {
-      if (isNegativeArch(slopes)) {
-        down = true;
-        sprintf(DIR_DEBUG, "DOWN");
-      }
-      else if (isPositiveArch(slopes)) {
-        up = true;
-        sprintf(DIR_DEBUG, "UP");
-      }
-  
-      if (up && down) {
-        reps += 1;
-        up = false;
-        down = false;
-      }
-      slopes.clear();
-    }
-  }
-}
-
 /*
 # Detect end of a set if object stays in roughly the same position for more than 10 seconds
 # stop0 is the time when the object first stopped
@@ -118,73 +31,80 @@ print ("incremented sets to " + str(sets))
 stop0 = -1
 reps = 0
 return (stop0, sets, reps)
-
 */
 /*
-Get average of at most the last n tracked pts not equal to None
-Used for checking if the marker moved over the last few pts
+Checks if the object has been in roughly the same position for more than n frames
 */
-/*
-float ptsAverage(pts) {
-  int nsum0 = 0
-  int nsum1 = 0
-  ctr = 1
-  # If pts has less than n non-None entries, get the average of all entries
-  for p in pts:
-    if (p is None):
-      continue
-    else:
-      nsum0 += p[0]
-      nsum1 += p[1]
-    if (ctr == n):
-      break
-    ctr += 1
-  return (nsum0 / ctr, nsum1 / ctr)
+bool isPaused() {
+// TODO: Implement this
+  bool value = false;
+  return value;
 }
+/*
+Define the lower and upper boundaries of the "green" ball in the HSV color space, then initialize the list of tracked points
 */
+void defineColour(Scalar &greenLower, Scalar &greenUpper) {
+  int hsv_values[3]; hsv_values[0] = 55, hsv_values[1] = 130, hsv_values[2] = 175;
+  int offset1 = 30, offset2 = 100;
+  greenLower = Scalar(hsv_values[0]-offset1, hsv_values[1]-offset1, hsv_values[2]-offset2);
+  greenUpper = Scalar(hsv_values[0]+offset1, hsv_values[1]+offset1, hsv_values[2]+offset2);
+}
+/*
+Find green objects in view
+*/
+void findGreenObject(Mat image, Mat &tmp, Scalar greenLower, Scalar greenUpper) {
+  cvtColor(image, tmp, COLOR_BGR2HSV);
+
+  // Construct a mask for the color "green"
+  inRange(tmp, greenLower, greenUpper, tmp);
+
+  // Copy mask into a grayscale image and blur
+  GaussianBlur(tmp, tmp, Size(15, 15), 0, 0);
+}
+vector<Point> defineArc() {
+  vector<Point> curvePoints;
+  int radius = 100;
+  for (int x = radius; x >= 14; x -= 1){
+    int y = sqrt((radius * radius) - (x * x));
+    Point new_point = Point(x, y);
+    curvePoints.push_back(new_point);
+  }
+  return curvePoints;
+}
+
 /*
 Main method exported to CameraView
 */
-void processVideoFrame(Mat &image, int &reps, std::deque<CvPoint> &pts, std::deque<float> &slopes, bool &up, bool &down, CvPoint &pt) {
-  // Define the lower and upper boundaries of the "green"
-  // ball in the HSV color space, then initialize the
-  // list of tracked points
-  int hsv_values[3]; hsv_values[0] = 55, hsv_values[1] = 130, hsv_values[2] = 175;
-  int offset1 = 30, offset2 = 100;
-  Scalar greenLower = Scalar(hsv_values[0]-offset1, hsv_values[1]-offset1, hsv_values[2]-offset2);
-  Scalar greenUpper = Scalar(hsv_values[0]+offset1, hsv_values[1]+offset1, hsv_values[2]+offset2);
+// TODO: separate this into smaller functions
+void processVideoFrame(Mat &image, Mat &path, int &reps, bool &up, bool &down, bool &stay, CvPoint &prev, CvPoint &cur, CvPoint &first, CvPoint &last, double &distance) {
 
-  Mat hsv = Mat::zeros( image.size(), CV_8UC1 );
-  // Convert image to the HSV color space
-  cvtColor(image, hsv, COLOR_BGR2HSV);
+  // Debugging string to be reused
+  char debug[100];
 
-  // Construct a mask for the color "green", then perform
-  // a series of dilations and erosions to remove any small
-  // blobs left in the mask
-  Mat thresholdedImage = Mat::zeros( image.size(), CV_8UC1 );
+  Scalar greenLower, greenUpper;
+  defineColour(greenLower, greenUpper);
 
-  inRange(hsv, greenLower, greenUpper, thresholdedImage);
+  Mat tmp = Mat::zeros( image.size(), CV_8UC1 );
+  findGreenObject(image, tmp, greenLower, greenUpper);
 
-  // Copy mask into a grayscale image
-  Mat hough_in = Mat::zeros( image.size(), CV_8UC1 );
-  thresholdedImage.copyTo(hough_in);
-  GaussianBlur(hough_in, hough_in, Size(15, 15), 0, 0);
-
-  // Convert cv::Mat to IplImage
-  IplImage *ipl_img = new IplImage(hough_in);
-  IplImage *ipl_image = new IplImage(image);
-
-  // Run the Hough function
+  // Find circle contours using Hough method
+  IplImage *hough_in_img = new IplImage(tmp);
   CvMemStorage *storage = cvCreateMemStorage(0);
-  CvSeq *circles = cvHoughCircles(ipl_img, storage, CV_HOUGH_GRADIENT, 4, image.rows/10, 100, 40, 1);
-
   CvPoint center;
+
+  // FIXME: This is from the C API - try not to mix with C++
+  double dp = 4;
+  double min_dist = image.rows / 10;
+  double p1 = 100, p2 = 40;
+  int min_radius = 1;
+  CvSeq *circles = cvHoughCircles(hough_in_img, storage, CV_HOUGH_GRADIENT, dp, min_dist, p1, p2, min_radius);
+
   // Find biggest circle
   int largestCircleRadius = 0, largestCircleRadiusIndex = 0;
   for (int i = 0; i < circles->total; i++) {
     float *p = (float*)cvGetSeqElem(circles, i);
     center = cvPoint(cvRound(p[0]),cvRound(p[1]));
-    CvScalar val = cvGet2D(ipl_img, center.y, center.x);
+    CvScalar val = cvGet2D(hough_in_img, center.y, center.x);
 
     if (val.val[0] > largestCircleRadius) {
       largestCircleRadius = val.val[0];
@@ -192,50 +112,125 @@ void processVideoFrame(Mat &image, int &reps, std::deque<CvPoint> &pts, std::deq
     }
   }
   
-  // Draw circle
-  if (circles -> total > 0 && largestCircleRadius >= 15) {
+  //double distance;
+  char up_debug[100], down_debug[100];
+  if (up) {
+    sprintf(up_debug, "UP");
+  }
+  else sprintf(up_debug, " ");
+  if (down) {
+    sprintf(down_debug, "DOWN");
+  }
+  else sprintf(down_debug, " ");
+  cv::putText(path, up_debug,
+              Point2f(50, 225),
+              FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 0, 0), 1);
+  cv::putText(path, down_debug,
+              Point2f(50, 250),
+              FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 0, 0), 1);
+  cv::putText(image, up_debug,
+              Point2f(50, 225),
+              FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 0, 0), 1);
+  cv::putText(image, down_debug,
+              Point2f(50, 250),
+              FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 0, 0), 1);
+
+  // Connect lines to the collected path matrix if they meet criteria
+  IplImage *image_img = new IplImage(image);
+  if (circles -> total > 0 && largestCircleRadius >= MIN_CIRCLE_RADIUS && center.x != 0 && center.y != 0 && (dist(prev, center) < MAX_DIST || prev.x == 0 && prev.y == 0)
+      //&& dist(first, center) < MIN_PTS_DIST
+      && center.x != prev.x && center.y != prev.y) {
+
+    // Add largest circle center to pts
     float *p = (float*)cvGetSeqElem(circles, largestCircleRadiusIndex);
     center = cvPoint(cvRound(p[0]),cvRound(p[1]));
-    cvCircle(ipl_image,  center, 3, CV_RGB(0,255,0), -1, CV_AA, 0);
-    cvCircle(ipl_image,  center, cvRound(p[2]), CV_RGB(255,0,0),  3, CV_AA, 0);
+    //pts.push_back(center);
+    cur = center;
 
-    pt = center;
+    // Draw circles to identify object on screen
+    cvCircle(image_img, center, 3, CV_RGB(0,255,0), -1, CV_AA, 0);
+    cvCircle(image_img, center, cvRound(p[2]), CV_RGB(255,0,0), 3, CV_AA, 0);
     
-    // Maintain the size of pts
-    if (pts.size() > COLLECTEDSLOPES_AMT)
-      //pts.pop_front();
-      pts.clear();
-    // Only add position if it is not too close to previous point - this prevents random outlier points from getting in
-    if (pts.size() > 0) {
-        if (pts.back().x != center.x && pts.back().y != center.y) {
-        pts.push_back(center);
+    // Save path to matrix by drawing a line
+    if (prev.x != 0 && prev.y != 0) {
+      line(path, prev, cur, Scalar(255, 0, 0), 1, 8);
+    }
+
+    // Keep a reference to first point to determine direction later
+    //if ((prev.x == 0 && prev.y == 0 && reps == 0) || (!up && !down)) {
+    if (!up && !down && distance == 0) {
+      first = center;
+    }
+  }
+  // This is executed when the object pauses (assume that means either up or down movement)
+  // Pause at top or bottom to trigger arc detection
+  else if ((center.x == prev.x && center.y == prev.y && distance > MIN_PTS_DIST) || (center.x == 0 && center.y == 0 && prev.x > 0 && prev.y > 0)) {
+    // Force path matrix to clear
+    stay = true;
+
+    // Find contour to compare it with defined rep arc
+    vector<vector<Point>> contours;
+    vector<Vec4i> hierarchy;
+
+    // The path matrix is a black/white image so no thresholding is needed here
+    // Go straight to finding contours
+    findContours(path, contours, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0,0));
+    Scalar color = Scalar(255, 255, 255);
+    drawContours(path, contours, 0, color, 2, 8, hierarchy, 0, Point());
+
+    // Define quarter circle
+    vector<Point> curvePoints = defineArc();
+    // Display arc shape
+    for (int n = 1; n < curvePoints.size(); n ++) {
+      line( path, curvePoints[n - 1], curvePoints[n], Scalar(255, 255, 255), 2, 8);
+    }
+
+    distance = dist(first, last);
+    // Compare shape of contour to arc, 0.0 = exact match, < 0.1
+    if(!contours.empty() && matchShapes(contours[0], curvePoints, CV_CONTOURS_MATCH_I3, RETR_EXTERNAL) <= 0.0001 && distance > MIN_PTS_DIST) {
+      double m1 = matchShapes(contours[0], curvePoints, CV_CONTOURS_MATCH_I1, RETR_EXTERNAL);
+      double m2 = matchShapes(contours[0], curvePoints, CV_CONTOURS_MATCH_I2, RETR_EXTERNAL);
+      double m3 = matchShapes(contours[0], curvePoints, CV_CONTOURS_MATCH_I3, RETR_EXTERNAL);
+      if (center.x > 0 && center.y > 0)
+        last = center;
+      // Determine up/down - (0,0) is top left in any orientation
+      if (last.y > first.y && distance > MIN_PTS_DIST && last.y != first.y) {
+        down = true;
+      }
+      else if (last.y < first.y && distance > MIN_PTS_DIST && last.y != first.y) {
+        up = true;
+      }
+
+      // Increment reps and reset directions
+      if (up && down) {
+        reps ++;
+        up = false;
+        down = false;
+        sprintf(up_debug, " ");
+        sprintf(down_debug, " ");
+      }
+      // Ignore down if up was not detected prior
+      else if (!up && down) {
+        // TODO: Uncomment this in release mode. Only commented out because I test in Portrait Upside Down mode
+        down = false;
       }
     }
-    else
-        pts.push_back(center);
   }
   cvReleaseMemStorage(&storage);
-  
-  // Debug pts
-  char str2[100];
-  if (pts.size() > 0) sprintf (str2, "PT %d %d with size %ld", pts.back().x, pts.back().y, pts.size());
-  cv::putText(image, str2,
-              Point2f(50, 100),
+  sprintf(debug, "%d %d", center.x, center.y);
+  cv::putText(image, debug,
+              Point2f(50, 125),
               FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 255, 255), 1);
   
-  // Detect direction to update slopes and reps
-  char str3[100];
-  if (pts.size() >= 2) {
-    sprintf(str3, "DD PT1 %d %d PT2 %d %d", pts[pts.size() - 2].x, pts[pts.size() - 2].y, pts[pts.size() - 1].x, pts[pts.size() - 1].y);
-    detectDirection(pts[pts.size() - 2], pts[pts.size() - 1], up, down, reps, slopes, image);
-    cv::putText(image, str3,
-                Point2f(50, 200),
-                FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 255, 255), 1);
-  }
-  cv::putText(image, DIR_DEBUG,
+  sprintf(debug, "Arclength: %lf", distance);
+  cv::putText(image, debug,
               Point2f(50, 150),
               FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 255, 255), 1);
   
+  sprintf(debug, "Radius: %d", largestCircleRadius);
+  cv::putText(image, debug,
+              Point2f(50, 200),
+              FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 255, 255), 1);
   // Add text for displaying counts
   char msg[20];
   sprintf (msg, "Reps: %d", reps);
@@ -243,5 +238,9 @@ void processVideoFrame(Mat &image, int &reps, std::deque<CvPoint> &pts, std::deq
               Point2f(50, 50),
               FONT_HERSHEY_SIMPLEX, 1, Scalar(255, 255, 255), 1);
 
-  image = cv::cvarrToMat(ipl_image);
+  image = cv::cvarrToMat(image_img) + image;
+  // For debugging: display path instead of image
+  //image = path;
+  // Done processing current point so assign it to prev
+  prev = cur;
 }

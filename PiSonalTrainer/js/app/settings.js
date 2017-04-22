@@ -3,6 +3,8 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import { Container, Content, Header, Button, Icon, Title, H1, H2, H3, Text} from 'native-base';
 import AppTheme from './theme';
 
+import {setConfigByKey} from './mongodb.js';
+
 class Settings extends Component {
   constructor(props){
       super(props);
@@ -45,6 +47,7 @@ class Settings extends Component {
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity activeOpacity={0.8} style={{backgroundColor: '#fff', marginTop: 5}} onPress={()=>{
+                        setConfigByKey('user', null);
                         this.props.onLogout();
                     }}>
                         <View style={{paddingTop: 20, paddingBottom: 20, paddingLeft: 10, flexDirection: 'row', alignItems: 'center'}}>

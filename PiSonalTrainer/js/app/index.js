@@ -5,15 +5,35 @@ import AppTheme from './theme';
 
 import Dashboard from './dashboard';
 import Login from './login';
- 
+
+import { getConfigByKey } from './mongodb.js';
+
 class App extends Component {
   constructor(props){
       super(props);
+      getConfigByKey('user', (val)=>{
+          if(val){
+            this.setState({
+                loading: false,
+                loggedInUser: val,
+                loggedIn: true
+            });
+          }
+          else{
+            this.setState({
+                loading: false
+            });
+          }
+      });
       this.state = {
+          loading: true,
           loggedIn: false
       };
   }
   render() {
+    if(this.state.loading){
+        return(null);
+    }
     if(this.state.loggedIn == null){
         return(
             <Container theme={AppTheme}>

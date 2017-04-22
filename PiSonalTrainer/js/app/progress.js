@@ -20,14 +20,92 @@ class Progress extends Component {
           selectedWeeksIndex: 0,
           selectedMusclesIndex: 0,
           selectedViewModeIndex: 0,
-          rows: []
+          rows: [],
+          data: null
       };
+  }
+  componentDidMount(){
       this.getLog(muscleGroupValues[0]);
   }
   getLog(muscleGroup){
       getLog(muscleGroup, this.props.user._id, (docs) => {
+          var reps = [];
+          var sets = [];
+          for(var i = 0; i < docs.length; i++){
+            var row = docs[i];
+            reps.push({
+                "x": i,
+                "y": row.reps
+            });
+            sets.push({
+                "x": i,
+                "y": row.sets
+            });
+          }
+        //   data = [
+        //     [{
+        //         "x": 0,
+        //         "y": 10
+        //     }, {
+        //         "x": 1,
+        //         "y": 11
+        //     }, {
+        //         "x": 2,
+        //         "y": 13
+        //     }, {
+        //         "x": 3,
+        //         "y": 12
+        //     }, {
+        //         "x": 4,
+        //         "y": 15
+        //     }, {
+        //         "x": 5,
+        //         "y": 11
+        //     }, {
+        //         "x": 6,
+        //         "y": 16
+        //     }, {
+        //         "x": 7,
+        //         "y": 11
+        //     }, {
+        //         "x": 8,
+        //         "y": 13
+        //     }, {
+        //         "x": 9,
+        //         "y": 11
+        //     }, {
+        //         "x": 10,
+        //         "y": 15
+        //     }, {
+        //         "x": 11,
+        //         "y": 12
+        //     }, {
+        //         "x": 12,
+        //         "y": 17
+        //     }, {
+        //         "x": 13,
+        //         "y": 16
+        //     }, {
+        //         "x": 14,
+        //         "y": 12
+        //     }, {
+        //         "x": 15,
+        //         "y": 11
+        //     }, {
+        //         "x": 16,
+        //         "y": 11
+        //     }, {
+        //         "x": 17,
+        //         "y": 15
+        //     }, {
+        //         "x": 18,
+        //         "y": 13
+        //     }]
+        // ];
+        //   alert(JSON.stringify(data));
           this.setState({
-              rows: docs
+              rows: docs,
+              data: reps.length > 0 ? [reps, sets] : null
           });
       });
   }
@@ -69,9 +147,16 @@ class Progress extends Component {
                     alignItems: 'center', 
                     flex: 1
                 }}>
-                    <H3 style={{paddingBottom: 20, color: '#606060'}}>Weight/Reps Ratio</H3>
-                    <StockLine
-                        data={sampleData.stockLine.data}
+                    {
+                        this.state.data ?
+                        <H3 style={{paddingBottom: 20, color: '#606060'}}>Weight/Reps Ratio</H3>
+                        :
+                        null
+                    }
+                    {
+                        this.state.data ?
+                        <StockLine
+                        data={this.state.data}
                         options={{
                             width: Dimensions.get('window').width-40,
                             height: 250,
@@ -119,6 +204,11 @@ class Progress extends Component {
                         }}
                         xKey='x'
                         yKey='y' />
+                    :
+                    null
+
+                    }
+                    
                 </View>
                 <View style={{marginTop: 10}}>
                     <SegmentedControlTab 
@@ -136,7 +226,7 @@ class Progress extends Component {
                         {
                             this.state.rows.map((row, index) => 
                             <ListItem >
-                                <Text>{months[row.date.getMonth()]} {row.date.getDate()}, {row.date.getFullYear()}</Text>
+                                <Text>{months[row.month]} {row.date}, {row.year}</Text>
                                 <Text style={{flex: 1, textAlign: 'right'}}>{Math.round((row.weight/(row.sets*row.reps)) * 100) / 100} Weight/Reps</Text>
                             </ListItem>
                             )

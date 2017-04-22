@@ -124,7 +124,9 @@ class Log extends Component {
                                             userid: this.props.user._id,
                                             muscleGroup: this.state.muscleGroup, 
                                             exerciseType: this.state.exerciseType, 
-                                            date: this.state.date, 
+                                            date: this.state.date.getDate(), 
+                                            month: this.state.date.getMonth(), 
+                                            year: this.state.date.getFullYear(),
                                             weight: parseInt(this.state.weight), 
                                             sets: parseInt(this.state.sets),
                                             reps: parseInt(this.state.reps)

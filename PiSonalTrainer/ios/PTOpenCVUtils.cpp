@@ -33,14 +33,6 @@ reps = 0
 return (stop0, sets, reps)
 */
 /*
-Checks if the object has been in roughly the same position for more than n frames
-*/
-bool isPaused() {
-// TODO: Implement this
-  bool value = false;
-  return value;
-}
-/*
 Define the lower and upper boundaries of the "green" ball in the HSV color space, then initialize the list of tracked points
 */
 void defineColour(Scalar &greenLower, Scalar &greenUpper) {
@@ -61,22 +53,19 @@ void findGreenObject(Mat image, Mat &tmp, Scalar greenLower, Scalar greenUpper) 
   // Copy mask into a grayscale image and blur
   GaussianBlur(tmp, tmp, Size(15, 15), 0, 0);
 }
-vector<Point> defineArc() {
-  vector<Point> curvePoints;
-  int radius = 100;
-  for (int x = radius; x >= 14; x -= 1){
-    int y = sqrt((radius * radius) - (x * x));
-    Point new_point = Point(x, y);
-    curvePoints.push_back(new_point);
-  }
-  return curvePoints;
+/*
+Resets point markers to initial state
+*/
+void resetPointers(CvPoint &first, CvPoint &last, CvPoint &prev, CvPoint &cur) {
+  first = CvPoint(-1, -1);
+  last = CvPoint(-1, -1);
+  prev = CvPoint(-1, -1);
+  cur = CvPoint(-1, -1);
 }
-
 /*
 Main method exported to CameraView
 */
-// TODO: separate this into smaller functions
-void processVideoFrame(Mat &image, Mat &path, int &reps, bool &up, bool &down, bool &stay, CvPoint &prev, CvPoint &cur, CvPoint &first, CvPoint &last, double &distance) {
+void processVideoFrame(Mat &image, int &reps, bool &up, bool &down, bool &stay, CvPoint &prev, CvPoint &cur, CvPoint &first, CvPoint &last, double &distance) {
 
   // Debugging string to be reused
   char debug[100];
@@ -112,7 +101,6 @@ void processVideoFrame(Mat &image, Mat &path, int &reps, bool &up, bool &down, b
     }
   }
   
-  //double distance;
   char up_debug[100], down_debug[100];
   if (up) {
     sprintf(up_debug, "UP");
@@ -122,12 +110,6 @@ void processVideoFrame(Mat &image, Mat &path, int &reps, bool &up, bool &down, b
     sprintf(down_debug, "DOWN");
   }
   else sprintf(down_debug, " ");
-  cv::putText(path, up_debug,
-              Point2f(50, 225),
-              FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 0, 0), 1);
-  cv::putText(path, down_debug,
-              Point2f(50, 250),
-              FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 0, 0), 1);
   cv::putText(image, up_debug,
               Point2f(50, 225),
               FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 0, 0), 1);
@@ -135,108 +117,112 @@ void processVideoFrame(Mat &image, Mat &path, int &reps, bool &up, bool &down, b
               Point2f(50, 250),
               FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 0, 0), 1);
 
-  // Connect lines to the collected path matrix if they meet criteria
   IplImage *image_img = new IplImage(image);
-  if (circles -> total > 0 && largestCircleRadius >= MIN_CIRCLE_RADIUS && center.x != 0 && center.y != 0 && (dist(prev, center) < MAX_DIST || prev.x == 0 && prev.y == 0)
-      //&& dist(first, center) < MIN_PTS_DIST
+  
+  // This is executed when the object pauses (assume that means either up or down movement) or disappears from view
+  // Pause or leave view at top or bottom to trigger arc detection
+  if (
+      // Object pauses or lingers in the same area
+      (abs(center.x - prev.x) < PAUSE_OFFSET && abs(center.y - prev.y) < PAUSE_OFFSET)
+      // OR Object goes offscreen
+      || (center.x == 0 && center.y == 0 && prev.x > 0 && prev.y > 0)
+      // OR enough points have been tracked to form half of a rep
+      || distance >= MIN_ARCLENGTH
+      ) {
+    stay = true;
+    
+    // Update value of last point
+    if (center.x > 0 && center.y > 0)
+      last = center;
+    
+    // Determine up/down - (0,0) is top left in any orientation
+    if (last.y < first.y && distance > MIN_ARCLENGTH && last.y > 0 && first.y > 0 && !up ) {
+      up = true;
+      distance = -1;
+      resetPointers(first, last, prev, cur);
+    }
+    else if (last.y > first.y && distance > MIN_ARCLENGTH && last.y > 0 && first.y > 0 && !down) {
+      down = true;
+      distance = -1;
+      resetPointers(first, last, prev, cur);
+    }
+    
+    // Increment reps and reset directions
+    if (up && down) {
+      reps ++;
+      up = false;
+      down = false;
+      distance = -1;
+      resetPointers(first, last, prev, cur);
+    }
+    // Ignore down if up was not detected prior
+    else if (!up && down) {
+      down = false;
+      distance = -1;
+      resetPointers(first, last, prev, cur);
+    }
+    // Ignore incomplete up/down and restart building path
+    else if (!up && !down){
+      distance = -1;
+      first = CvPoint(-1, -1);
+    }
+    // Reset everything if waiting for down, but down has not happened after a while
+    else if (distance > MAX_ARCLENGTH && up && !down){
+      up = false;
+      down = false;
+      distance = -1;
+      resetPointers(first, last, prev, cur);
+    }
+    
+    sprintf(up_debug, " ");
+    sprintf(down_debug, " ");
+  }
+  // Keep tracking path points if they meet criteria but length is not enough
+  else if (
+      // Circle with valid size is found and largest one is visible on screen
+      circles -> total > 0 && largestCircleRadius >= MIN_CIRCLE_RADIUS && center.x != 0 && center.y != 0
+      // Path is not long enough yet OR this is the first detected point
+      && (dist(prev, center) < MAX_PT_DIST || (prev.x < 0 && prev.y < 0))
+      // No duplicates
       && center.x != prev.x && center.y != prev.y) {
 
     // Add largest circle center to pts
     float *p = (float*)cvGetSeqElem(circles, largestCircleRadiusIndex);
     center = cvPoint(cvRound(p[0]),cvRound(p[1]));
-    //pts.push_back(center);
-    cur = center;
-
     // Draw circles to identify object on screen
     cvCircle(image_img, center, 3, CV_RGB(0,255,0), -1, CV_AA, 0);
     cvCircle(image_img, center, cvRound(p[2]), CV_RGB(255,0,0), 3, CV_AA, 0);
     
-    // Save path to matrix by drawing a line
-    if (prev.x != 0 && prev.y != 0) {
-      line(path, prev, cur, Scalar(255, 0, 0), 1, 8);
-    }
-
     // Keep a reference to first point to determine direction later
-    //if ((prev.x == 0 && prev.y == 0 && reps == 0) || (!up && !down)) {
-    if (!up && !down && distance == 0) {
+    if (distance == -1 && first.x == -1 && first.y == -1) {
       first = center;
     }
-  }
-  // This is executed when the object pauses (assume that means either up or down movement)
-  // Pause at top or bottom to trigger arc detection
-  else if ((center.x == prev.x && center.y == prev.y && distance > MIN_PTS_DIST) || (center.x == 0 && center.y == 0 && prev.x > 0 && prev.y > 0)) {
-    // Force path matrix to clear
-    stay = true;
-
-    // Find contour to compare it with defined rep arc
-    vector<vector<Point>> contours;
-    vector<Vec4i> hierarchy;
-
-    // The path matrix is a black/white image so no thresholding is needed here
-    // Go straight to finding contours
-    findContours(path, contours, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0,0));
-    Scalar color = Scalar(255, 255, 255);
-    drawContours(path, contours, 0, color, 2, 8, hierarchy, 0, Point());
-
-    // Define quarter circle
-    vector<Point> curvePoints = defineArc();
-    // Display arc shape
-    for (int n = 1; n < curvePoints.size(); n ++) {
-      line( path, curvePoints[n - 1], curvePoints[n], Scalar(255, 255, 255), 2, 8);
+    // Otherwise update current latest point
+    // FIXME: remove cur?
+    else {
+      last = center;
+      cur = center;
     }
-
-    distance = dist(first, last);
-    // Compare shape of contour to arc, 0.0 = exact match, < 0.1
-    if(!contours.empty() && matchShapes(contours[0], curvePoints, CV_CONTOURS_MATCH_I3, RETR_EXTERNAL) <= 0.0001 && distance > MIN_PTS_DIST) {
-      double m1 = matchShapes(contours[0], curvePoints, CV_CONTOURS_MATCH_I1, RETR_EXTERNAL);
-      double m2 = matchShapes(contours[0], curvePoints, CV_CONTOURS_MATCH_I2, RETR_EXTERNAL);
-      double m3 = matchShapes(contours[0], curvePoints, CV_CONTOURS_MATCH_I3, RETR_EXTERNAL);
-      if (center.x > 0 && center.y > 0)
-        last = center;
-      // Determine up/down - (0,0) is top left in any orientation
-      if (last.y > first.y && distance > MIN_PTS_DIST && last.y != first.y) {
-        down = true;
-      }
-      else if (last.y < first.y && distance > MIN_PTS_DIST && last.y != first.y) {
-        up = true;
-      }
-
-      // Increment reps and reset directions
-      if (up && down) {
-        reps ++;
-        up = false;
-        down = false;
-        sprintf(up_debug, " ");
-        sprintf(down_debug, " ");
-      }
-      // Ignore down if up was not detected prior
-      else if (!up && down) {
-        // TODO: Uncomment this in release mode. Only commented out because I test in Portrait Upside Down mode
-        down = false;
-      }
-    }
+    // Update distance
+    distance = dist(first, center);
   }
   cvReleaseMemStorage(&storage);
-  sprintf(debug, "%d %d", center.x, center.y);
+  sprintf(debug, "Position: %d %d", center.x, center.y);
   cv::putText(image, debug,
               Point2f(50, 125),
-              FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 255, 255), 1);
+              FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 0), 1);
   
   sprintf(debug, "Arclength: %lf", distance);
   cv::putText(image, debug,
               Point2f(50, 150),
-              FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 255, 255), 1);
-  
-  sprintf(debug, "Radius: %d", largestCircleRadius);
-  cv::putText(image, debug,
-              Point2f(50, 200),
-              FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 255, 255), 1);
+              FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 0), 1);
+ 
   // Add text for displaying counts
   char msg[20];
   sprintf (msg, "Reps: %d", reps);
   cv::putText(image, msg,
               Point2f(50, 50),
-              FONT_HERSHEY_SIMPLEX, 1, Scalar(255, 255, 255), 1);
+              FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 0), 2);
 
   image = cv::cvarrToMat(image_img) + image;
   // For debugging: display path instead of image

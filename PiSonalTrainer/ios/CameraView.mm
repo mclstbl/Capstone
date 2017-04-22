@@ -13,8 +13,6 @@ using namespace cv;
 @implementation CameraView{
   int reps;
   #ifdef __cplusplus
-  //std::deque<CvPoint> pts;
-  cv::Mat path;
   bool up;
   bool down;
   bool stay;
@@ -63,9 +61,11 @@ RCT_EXPORT_MODULE();
     down = false;
     stay = false;
     // Init
-    prev.x = 0;
-    prev.y = 0;
-    distance = 0;
+    prev = CvPoint(-1, -1);
+    cur = CvPoint(-1, -1);
+    distance = -1;
+    first = CvPoint(-1,-1);
+    last = CvPoint(-1,-1);
     
     RCTLog(@"Starting camera from CameraView");
     [self.videoCamera start];
@@ -88,20 +88,11 @@ Do OpenCV image processing here! processImage gets called by the delegate for ea
 {
 #ifdef __cplusplus
   // Call functions defined in PTOpenCVUtils
-  // Initialize the path matrix - this is expected to only run during processing of the first frame
-  if (path.size() != image.size()) {
-    path = Mat::zeros(image.size(), CV_8UC1);
-  }
-//  long size = pts.size();
   // stay is true when object pauses or object moves off view
   if (stay) {
-//    pts.clear();
-    path.release();
-    path = Mat::zeros(image.size(), CV_8UC1);
     stay = false;
-    distance = 0;
   }
-  processVideoFrame(image, path, reps, up, down, stay, prev, cur, first, last, distance);
+  processVideoFrame(image, reps, up, down, stay, prev, cur, first, last, distance);
 #endif
 }
 

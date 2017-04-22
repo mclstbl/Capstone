@@ -5,7 +5,7 @@ import AppTheme from './theme';
 
 import Signup from './signup';
 
-import {getUser} from './mongodb.js';
+import {getUser, setConfigByKey} from './mongodb.js';
 
 class Login extends Component {
   constructor(props){
@@ -45,6 +45,7 @@ class Login extends Component {
                             getUser(this.state, (doc)=>{
                                 if(doc){
                                     this.props.onLogin(doc);
+                                    setConfigByKey('user', doc);
                                 }
                                 else{
                                     alert('Incorrect username/email or password');

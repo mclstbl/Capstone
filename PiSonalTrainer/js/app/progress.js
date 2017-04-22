@@ -136,7 +136,7 @@ class Progress extends Component {
                         {
                             this.state.rows.map((row, index) => 
                             <ListItem >
-                                <Text>{months[row.date.getMonth()]} {row.date.getDate()}, {row.date.getFullYear()}</Text>
+                                <Text>{months[row.month]} {row.date}, {row.year}</Text>
                                 <Text style={{flex: 1, textAlign: 'right'}}>{Math.round((row.weight/(row.sets*row.reps)) * 100) / 100} Weight/Reps</Text>
                             </ListItem>
                             )

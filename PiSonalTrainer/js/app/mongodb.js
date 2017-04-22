@@ -63,6 +63,7 @@ exports.insertUser = function(user, cb){
 exports.insertLog = function(data, cb){
   // alert(JSON.stringify(data));
   Firebase.addLog(data);
+  cb({});
   //{userid: '', muscleGroup: 'Biceps', exerciseType: 'Hammer Curls', date: '', weight: 2, sets: 3, reps: 10}
   // log.insert(data, function (err, doc) {
   //   cb(doc);

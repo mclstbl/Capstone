@@ -57,7 +57,7 @@ class Firebase{
                     ret.push(val[key]);
                 }
             }
-            alert(JSON.stringify(ret));
+            // alert(JSON.stringify(ret));
             cb(ret);
         });
     }

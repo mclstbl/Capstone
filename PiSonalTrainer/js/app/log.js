@@ -51,7 +51,6 @@ class Log extends Component {
                           if (error) {
                             console.error(error);
                           } else {
-                            alert(reps);
                             this.setState({
                                 reps: reps,
                                 showCamera: false,

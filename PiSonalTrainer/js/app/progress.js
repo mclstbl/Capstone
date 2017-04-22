@@ -22,6 +22,8 @@ class Progress extends Component {
           selectedViewModeIndex: 0,
           rows: []
       };
+  }
+  componentDidMount(){
       this.getLog(muscleGroupValues[0]);
   }
   getLog(muscleGroup){

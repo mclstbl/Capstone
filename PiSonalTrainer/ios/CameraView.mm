@@ -56,6 +56,7 @@ RCT_EXPORT_MODULE();
     
     // Initialize rep count to zero
     reps = 0;
+    self.r = [NSNumber numberWithInt:reps];
     // Initialize directions
     up = false;
     down = false;
@@ -77,6 +78,8 @@ RCT_EXPORT_MODULE();
 - (void) dealloc
 {
   self.videoCamera = nil;
+  self.r = nil;
+  self.counts = nil;
 }
 
 #pragma mark - Protocol CvVideoCameraDelegate
@@ -90,30 +93,16 @@ Do OpenCV image processing here! processImage gets called by the delegate for ea
   // Call functions defined in PTOpenCVUtils
   // stay is true when object pauses or object moves off view
   if (stay) {
+    // Start of a set
     stay = false;
   }
+  reps = [self.r intValue];
   processVideoFrame(image, reps, up, down, stay, prev, cur, first, last, distance);
 #endif
-}
-
-#pragma mark - UI Actions
-/*
-This is called by the react-native side in order to navigate out of this native view.
-*/
-RCT_EXPORT_METHOD(quit:(RCTResponseSenderBlock)callback)
-{
-  // Only return the reps count.This can be changed to an NSDictionary with other values.
-  // FIXME: Return reps and sets NSDictionary
-  NSNumber *_reps = [NSNumber numberWithInt:reps];
-  callback(@[[NSNull null], _reps]);
-}
-/*
-This function resets values but doesn't exit the native view.
-*/
-RCT_EXPORT_METHOD(reset)
-{
-  reps = 0;
-  // TODO: add sets reset here, and other things that need to be reset
+  // FIXME: dynamically update this when set detection is finished
+  //reps = 1;
+  self.r = [NSNumber numberWithInt:reps];
+  self.counts = @[self.r, self.r, self.r];
 }
 
 @end

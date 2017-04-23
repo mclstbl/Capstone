@@ -9,7 +9,7 @@ import {insertLog} from './mongodb.js';
 
 import RNOpenCV from './camera';
 const RNOpenCVNative = requireNativeComponent('NativeCV',null);
-const CameraModule = NativeModules.CameraView;
+const CameraModule = NativeModules.NativeCV;
 
 var {height, width} = Dimensions.get('window');
 
@@ -18,7 +18,9 @@ class Log extends Component {
       super(props);
       this.state = {
           showAddLog: false,
-          showCamera: false
+          showCamera: false,
+          reps: 'Reps (eg. 10)',
+          sets: 'Sets (eg. 3)'
       };
   }
   render() {
@@ -36,7 +38,6 @@ class Log extends Component {
                             console.error(error);
                           } else {
                             this.setState({
-                                reps: 0,
                                 showCamera: false,
                                 showAddLog: true
                             });
@@ -53,6 +54,7 @@ class Log extends Component {
                           } else {
                             this.setState({
                                 reps: reps,
+                                sets: reps.length,
                                 showCamera: false,
                                 showAddLog: true
                             });
@@ -60,12 +62,6 @@ class Log extends Component {
                           }});
                     }}>
                     Save and Quit
-                    </Button>
-                    <Button style={styles.button3}
-                        onPress={()=>{
-                            CameraModule.reset();
-                        }}>
-                        Reset
                     </Button>
                 </View>
             </View>
@@ -105,11 +101,11 @@ class Log extends Component {
                         </InputGroup>
                         <InputGroup borderType='rounded' style={{marginTop: 10}} >
                             <Icon name='user' style={{color:'#384850'}}/>
-                            <Input autoCorrect={false} style={{textAlign: 'center', marginLeft: -20}} placeholder='Sets (eg. 3)' onChangeText={(text) => {this.setState({sets: text})}}/>
+                            <Input autoCorrect={false} style={{textAlign: 'center', marginLeft: -20}} placeholder={this.state.sets.toString()} onChangeText={(text) => {this.setState({sets: text})}}/>
                         </InputGroup>
                         <InputGroup borderType='rounded' style={{marginTop: 10}} >
                             <Icon name='user' style={{color:'#384850'}}/>
-                            <Input autoCorrect={false} style={{textAlign: 'center', marginLeft: -20}} placeholder='Reps (eg. 10)' onChangeText={(text) => {this.setState({reps: text})}}/>
+                            <Input autoCorrect={false} style={{textAlign: 'center', marginLeft: -20}} placeholder={this.state.reps.toString()} onChangeText={(text) => {this.setState({reps: text})}}/>
                         </InputGroup>
                     </View>
 
@@ -119,31 +115,57 @@ class Log extends Component {
                                     return /^\+?(0|[1-9]\d*)$/.test(str);
                                 }
                                 if(this.state.weight && this.state.reps && this.state.sets){
-                                    if(isNormalInteger(this.state.weight) && isNormalInteger(this.state.reps) && isNormalInteger(this.state.sets)){
-                                        insertLog({
-                                            userid: this.props.user._id,
-                                            muscleGroup: this.state.muscleGroup, 
-                                            exerciseType: this.state.exerciseType, 
-                                            date: this.state.date.getDate(), 
-                                            month: this.state.date.getMonth(), 
-                                            year: this.state.date.getFullYear(),
-                                            weight: parseInt(this.state.weight), 
-                                            sets: parseInt(this.state.sets),
-                                            reps: parseInt(this.state.reps)
-                                        }, (doc) => {
-                                            this.setState({
-                                                showAddLog: false,
-                                                muscleGroup: null,
-                                                exerciseType: null,
-                                                date: null,
-                                                weight: null,
-                                                sets: null,
-                                                reps: null
+                                    if(isNormalInteger(this.state.weight) && this.state.reps instanceof Array){
+                                        for (var rep of this.state.reps) {
+                                            insertLog({
+                                                userid: this.props.user._id,
+                                                muscleGroup: this.state.muscleGroup,
+                                                exerciseType: this.state.exerciseType,
+                                                date: this.state.date.getDate(), 
+                                                month: this.state.date.getMonth(),
+                                                year: this.state.date.getFullYear(),
+                                                weight: parseInt(this.state.weight), 
+                                                sets: parseInt(1),
+                                                reps: parseInt(rep)
+                                            }, (doc) => {
+                                                this.setState({
+                                                    showAddLog: false,
+                                                    muscleGroup: null,
+                                                    exerciseType: null,
+                                                    date: null,
+                                                    weight: null,
+                                                    sets: null,
+                                                    reps: null
+                                                });
+                                                alert('Excerise Logged!');
                                             });
-                                            alert('Excerise Logged!');
-                                        });
+                                        }
                                     }
-                                    else{
+                                    else if (isNormalInteger(this.state.weight) && isNormalInteger(this.state.reps) && isNormalInteger(this.state.sets)) {
+                                        insertLog({
+                                                userid: this.props.user._id,
+                                                muscleGroup: this.state.muscleGroup,
+                                                exerciseType: this.state.exerciseType,
+                                                date: this.state.date.getDate(),
+                                                month: this.state.date.getMonth(),
+                                                year: this.state.date.getFullYear(),
+                                                weight: parseInt(this.state.weight),
+                                                sets: parseInt(this.state.sets),
+                                                reps: parseInt(this.state.reps)
+                                            }, (doc) => {
+                                                this.setState({
+                                                    showAddLog: false,
+                                                    muscleGroup: null,
+                                                    exerciseType: null,
+                                                    date: null,
+                                                    weight: null,
+                                                    sets: null,
+                                                    reps: null
+                                                });
+                                                alert('Excerise Logged!');
+                                            });
+                                    }
+                                    else {
                                         alert('All fields are must be positive numeric value.');
                                     }
                                 }
@@ -264,9 +286,9 @@ class Log extends Component {
 
 var styles = StyleSheet.create({
     buttonbar: { paddingTop:height - 70, paddingBottom:10, justifyContent: 'space-around', flexDirection:'row', alignItems: 'center' },
-    button1:{ width: 150, height: 70, backgroundColor: 'red' },
-    button2:{ width: 150, height: 70, backgroundColor: 'green' },
-    button3:{ width: 150, height: 70, backgroundColor: 'orange' }
+    button1:{ width: width / 2, height: 70, backgroundColor: 'red' },
+    button2:{ width: width / 2, height: 70, backgroundColor: 'green' },
+    button3:{ width: width / 3, height: 70, backgroundColor: 'orange' }
 });
 
 module.exports = Log;

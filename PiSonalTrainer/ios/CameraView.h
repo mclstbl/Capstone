@@ -38,4 +38,8 @@
 @property (strong, nonatomic) UIButton *saveButton;
 @property (strong, nonatomic) UIButton *resetButton;
 
+// Rep counts during session
+@property (copy) NSNumber *r;
+@property (copy) NSArray *counts;
+
 @end

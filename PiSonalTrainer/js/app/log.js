@@ -137,9 +137,9 @@ class Log extends Component {
                                                     sets: null,
                                                     reps: null
                                                 });
-                                                alert('Excerise Logged!');
                                             });
                                         }
+                                        alert('Excerise Logged!');
                                     }
                                     else if (isNormalInteger(this.state.weight) && isNormalInteger(this.state.reps) && isNormalInteger(this.state.sets)) {
                                         insertLog({
@@ -286,9 +286,9 @@ class Log extends Component {
 
 var styles = StyleSheet.create({
     buttonbar: { paddingTop:height - 70, paddingBottom:10, justifyContent: 'space-around', flexDirection:'row', alignItems: 'center' },
-    button1:{ width: width / 2, height: 70, backgroundColor: 'red' },
-    button2:{ width: width / 2, height: 70, backgroundColor: 'green' },
-    button3:{ width: width / 3, height: 70, backgroundColor: 'orange' }
+    button1:{ width: width / 2, height: 70, backgroundColor: 'red', borderRadius: 0 },
+    button2:{ width: width / 2, height: 70, backgroundColor: 'green', borderRadius: 0 },
+    button3:{ width: width / 3, height: 70, backgroundColor: 'orange', borderRadius: 0 }
 });
 
 module.exports = Log;

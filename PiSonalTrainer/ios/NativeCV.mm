@@ -27,6 +27,10 @@ This is called by the react-native side in order to navigate out of this native 
 */
 RCT_EXPORT_METHOD(quit:(RCTResponseSenderBlock)callback)
 {
+  // Add last set of reps if they haven't been added
+  if ([self.cameraView.r intValue] > 0) {
+    [self.cameraView.counts addObject:self.cameraView.r];
+  }
   // Return array of reps in a session
   // The length of array equals the number of sets
   callback(@[[NSNull null], self.cameraView.counts]);

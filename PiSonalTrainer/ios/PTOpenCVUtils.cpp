@@ -20,19 +20,6 @@ double dist(CvPoint a, CvPoint b) {
   return sqrt(pow((a.x - b.x), 2) + pow((a.y - b.y), 2));
 }
 /*
-# Detect end of a set if object stays in roughly the same position for more than 10 seconds
-# stop0 is the time when the object first stopped
-# t0 is the current time
-def detectEndOfSet(stop0, t0, sets, reps):
-if ((t0 - stop0) >= 5 and reps > 0):
-print ("reset reps")
-sets += 1
-print ("incremented sets to " + str(sets))
-stop0 = -1
-reps = 0
-return (stop0, sets, reps)
-*/
-/*
 Define the lower and upper boundaries of the "green" ball in the HSV color space, then initialize the list of tracked points
 */
 void defineColour(Scalar &greenLower, Scalar &greenUpper) {
@@ -65,7 +52,7 @@ void resetPointers(CvPoint &first, CvPoint &last, CvPoint &prev, CvPoint &cur) {
 /*
 Main method exported to CameraView
 */
-void processVideoFrame(Mat &image, int &reps, bool &up, bool &down, bool &stay, CvPoint &prev, CvPoint &cur, CvPoint &first, CvPoint &last, double &distance) {
+void processVideoFrame(Mat &image, int &reps, int sets, bool &up, bool &down, bool &stay, CvPoint &prev, CvPoint &cur, CvPoint &first, CvPoint &last, double &distance) {
 
   // Debugging string to be reused
   char debug[100];
@@ -102,46 +89,63 @@ void processVideoFrame(Mat &image, int &reps, bool &up, bool &down, bool &stay, 
   }
   
   char up_debug[100], down_debug[100];
+  
   if (up) {
     sprintf(up_debug, "UP");
+    line(image, Point(0, 60), Point(image.size().width / 2, 60), Scalar(255, 0, 0), 2, 8);
   }
-  else sprintf(up_debug, " ");
+  else {
+    sprintf(up_debug, " ");
+  }
   if (down) {
     sprintf(down_debug, "DOWN");
+    line(image, Point(image.size().width / 2, 60), Point(image.size().width, 60), Scalar(255, 0, 0), 2, 8);
   }
-  else sprintf(down_debug, " ");
+  else {
+    sprintf(down_debug, " ");
+  }
+  /*
   cv::putText(image, up_debug,
               Point2f(50, 225),
               FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 0, 0), 1);
   cv::putText(image, down_debug,
               Point2f(50, 250),
               FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 0, 0), 1);
-
+  */
   IplImage *image_img = new IplImage(image);
   
+  if (circles -> total == 0) {
+    sprintf(debug, "Object not found. Check your lighting and position!");
+    cv::putText(image, debug,
+                Point2f(20, 250),
+                FONT_HERSHEY_SIMPLEX, 0.3, Scalar(0, 0, 255), 1);
+    stay = true;
+  }
   // This is executed when the object pauses (assume that means either up or down movement) or disappears from view
   // Pause or leave view at top or bottom to trigger arc detection
-  if (
+  else if (
       // Object pauses or lingers in the same area
-      (abs(center.x - prev.x) < PAUSE_OFFSET && abs(center.y - prev.y) < PAUSE_OFFSET)
+      (dist(center, prev) < PAUSE_OFFSET)
       // OR Object goes offscreen
       || (center.x == 0 && center.y == 0 && prev.x > 0 && prev.y > 0)
       // OR enough points have been tracked to form half of a rep
       || distance >= MIN_ARCLENGTH
       ) {
-    stay = true;
+    if (distance < MIN_ARCLENGTH ||
+        distance == dist(first, center))
+      stay = true;
     
     // Update value of last point
     if (center.x > 0 && center.y > 0)
       last = center;
     
     // Determine up/down - (0,0) is top left in any orientation
-    if (last.y < first.y && distance > MIN_ARCLENGTH && last.y > 0 && first.y > 0 && !up ) {
+    if (last.y < first.y && distance >= MIN_ARCLENGTH && last.y > 0 && first.y > 0 && !up ) {
       up = true;
       distance = -1;
       resetPointers(first, last, prev, cur);
     }
-    else if (last.y > first.y && distance > MIN_ARCLENGTH && last.y > 0 && first.y > 0 && !down) {
+    else if (last.y > first.y && distance >= MIN_ARCLENGTH && last.y > 0 && first.y > 0 && !down) {
       down = true;
       distance = -1;
       resetPointers(first, last, prev, cur);
@@ -180,12 +184,21 @@ void processVideoFrame(Mat &image, int &reps, bool &up, bool &down, bool &stay, 
   // Keep tracking path points if they meet criteria but length is not enough
   else if (
       // Circle with valid size is found and largest one is visible on screen
-      circles -> total > 0 && largestCircleRadius >= MIN_CIRCLE_RADIUS && center.x != 0 && center.y != 0
+      circles -> total > 0
+           //&& largestCircleRadius >= MIN_CIRCLE_RADIUS
+           && center.x != 0 && center.y != 0
       // Path is not long enough yet OR this is the first detected point
       && (dist(prev, center) < MAX_PT_DIST || (prev.x < 0 && prev.y < 0))
       // No duplicates
       && center.x != prev.x && center.y != prev.y) {
 
+    
+    if (distance == dist(first, center))
+      stay = true;
+    else {
+      stay = false;
+    }
+    
     // Add largest circle center to pts
     float *p = (float*)cvGetSeqElem(circles, largestCircleRadiusIndex);
     center = cvPoint(cvRound(p[0]),cvRound(p[1]));
@@ -206,25 +219,30 @@ void processVideoFrame(Mat &image, int &reps, bool &up, bool &down, bool &stay, 
     // Update distance
     distance = dist(first, center);
   }
+  
+  image = cv::cvarrToMat(image_img);
+  
   cvReleaseMemStorage(&storage);
-  sprintf(debug, "Position: %d %d", center.x, center.y);
+  /*sprintf(debug, "Position: %d %d", center.x, center.y);
   cv::putText(image, debug,
               Point2f(50, 125),
-              FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 0), 1);
+              FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 0), 1);*/
   
-  sprintf(debug, "Arclength: %lf", distance);
+  /*sprintf(debug, "Distance: %lf", distance);
   cv::putText(image, debug,
-              Point2f(50, 150),
+              Point2f(10, 150),
               FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 0), 1);
- 
+  */
   // Add text for displaying counts
-  char msg[20];
-  sprintf (msg, "Reps: %d", reps);
-  cv::putText(image, msg,
-              Point2f(50, 50),
+  sprintf (debug, "Reps: %d", reps);
+  cv::putText(image, debug,
+              Point2f(10, 25),
+              FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 0), 2);
+  sprintf (debug, "Sets: %d", sets);
+  cv::putText(image, debug,
+              Point2f(10, 45),
               FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 0), 2);
 
-  image = cv::cvarrToMat(image_img) + image;
   // For debugging: display path instead of image
   //image = path;
   // Done processing current point so assign it to prev

@@ -20,6 +20,8 @@ using namespace cv;
   CvPoint first, last;
   double distance;
   #endif
+  unsigned long pause_start;
+  bool paused;
 }
 
 RCT_EXPORT_MODULE();
@@ -57,6 +59,7 @@ RCT_EXPORT_MODULE();
     // Initialize rep count to zero
     reps = 0;
     self.r = [NSNumber numberWithInt:reps];
+    self.counts = [[NSMutableArray alloc] init];
     // Initialize directions
     up = false;
     down = false;
@@ -67,6 +70,8 @@ RCT_EXPORT_MODULE();
     distance = -1;
     first = CvPoint(-1,-1);
     last = CvPoint(-1,-1);
+    pause_start = 0;
+    paused = false;
     
     RCTLog(@"Starting camera from CameraView");
     [self.videoCamera start];
@@ -89,20 +94,36 @@ Do OpenCV image processing here! processImage gets called by the delegate for ea
 */
 - (void)processImage:(Mat&)image;
 {
+  int sets = [self.counts count];
 #ifdef __cplusplus
   // Call functions defined in PTOpenCVUtils
+  reps = [self.r intValue];
+  processVideoFrame(image, reps, sets, up, down, stay, prev, cur, first, last, distance);
+#endif
+  self.r = [NSNumber numberWithInt:reps];
+  // Set detection
   // stay is true when object pauses or object moves off view
   if (stay) {
-    // Start of a set
-    stay = false;
+    pause_start ++;
+    // Check for pause of 10 seconds or more (5 for demo)
+    if (pause_start / CV_CAMERA_FPS > 5 && !paused && reps > 0) {
+      // Append to reps array
+      [self.counts addObject:self.r];
+      paused = true;
+      self.r = [NSNumber numberWithInt:0];
+      up = false;
+      down = false;
+      distance = -1;
+      prev = CvPoint(-1, -1);
+      cur = CvPoint(-1, -1);
+      first = CvPoint(-1,-1);
+      last = CvPoint(-1,-1);
+    }
   }
-  reps = [self.r intValue];
-  processVideoFrame(image, reps, up, down, stay, prev, cur, first, last, distance);
-#endif
-  // FIXME: dynamically update this when set detection is finished
-  //reps = 1;
-  self.r = [NSNumber numberWithInt:reps];
-  self.counts = @[self.r, self.r, self.r];
+  else {
+    pause_start = 0;
+    paused = false;
+  }
 }
 
 @end

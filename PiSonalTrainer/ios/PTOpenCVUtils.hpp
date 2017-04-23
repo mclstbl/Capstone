@@ -18,16 +18,16 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>
 
-#define MAX_PT_DIST 100 // distance between consecutive points
-#define MIN_ARCLENGTH 120 // arclength
-#define MAX_ARCLENGTH 250 // arclength
-#define MIN_CIRCLE_RADIUS 252 // size of detected circle
-#define PAUSE_OFFSET 3 // allowed distance between points to be considered a pause
+#define MAX_PT_DIST 150 // distance between consecutive points
+#define MIN_ARCLENGTH 80 // arclength
+#define MAX_ARCLENGTH 200 // arclength
+#define MIN_CIRCLE_RADIUS 200 // size of detected circle
+#define PAUSE_OFFSET 30 // allowed distance between points to be considered a pause
 
 using namespace cv;
 
 double dist(CvPoint a, CvPoint b);
 
-void processVideoFrame(Mat &image, int &reps, bool &up, bool &down, bool &stay, CvPoint &prev, CvPoint &cur, CvPoint &first, CvPoint &last, double &distance);
+void processVideoFrame(Mat &image, int &reps, int sets, bool &up, bool &down, bool &stay, CvPoint &prev, CvPoint &cur, CvPoint &first, CvPoint &last, double &distance);
 
 #endif /* PTOpenCVUtils_hpp */

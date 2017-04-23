@@ -24,7 +24,7 @@
 #import <React/RCTLog.h>
 #import <React/RCTBridgeModule.h>
 #import <Availability.h>
-#define CV_CAMERA_FPS 20
+#define CV_CAMERA_FPS 30
 #endif
 
 @interface CameraView : RCTView <CvVideoCameraDelegate, RCTBridgeModule>
@@ -40,6 +40,6 @@
 
 // Rep counts during session
 @property (copy) NSNumber *r;
-@property (copy) NSArray *counts;
+@property (strong) NSMutableArray *counts;
 
 @end

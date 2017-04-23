@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, TouchableOpacity, Dimensions  } from 'react-native';
+import { View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { Container, Content, Header, Button, Icon, Title, H1, H2, H3, Text, List, ListItem} from 'native-base';
 import AppTheme from './theme';
 
@@ -174,8 +174,8 @@ class Progress extends Component {
                             axisX: {
                                 showAxis: true,
                                 showLines: true,
-                                showLabels: false,
-                                showTicks: false,
+                                showLabels: true,
+                                showTicks: true,
                                 zeroAxis: false,
                                 orient: 'bottom',
                                 tickValues: [],
@@ -227,7 +227,7 @@ class Progress extends Component {
                             this.state.rows.map((row, index) => 
                             <ListItem >
                                 <Text>{months[row.month]} {row.date}, {row.year}</Text>
-                                <Text style={{flex: 1, textAlign: 'right'}}>{Math.round((row.weight/(row.sets*row.reps)) * 100) / 100} Weight/Reps</Text>
+                                <Text style={{flex: 1, textAlign: 'right'}}>{Math.round((row.weight/(row.sets*row.reps)) * 100) / 100} Average lb/rep</Text>
                             </ListItem>
                             )
                         }

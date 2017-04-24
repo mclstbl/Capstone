@@ -19,7 +19,7 @@
 #include <opencv2/core.hpp>
 
 #define MAX_PT_DIST 150 // distance between consecutive points
-#define MIN_ARCLENGTH 80 // arclength
+#define MIN_ARCLENGTH 70 // arclength
 #define MAX_ARCLENGTH 200 // arclength
 #define MIN_CIRCLE_RADIUS 200 // size of detected circle
 #define PAUSE_OFFSET 30 // allowed distance between points to be considered a pause
